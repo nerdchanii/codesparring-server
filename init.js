@@ -5,9 +5,16 @@ import apiRouter from "./api/apiRouter.js";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
 import socket from "./socket/socket.js";
+import bodyParser from "body-parser";
+
 dotenv.config("./.env");
+
 export const app = express();
-app.use(cors({ allowedHeaders: { origin: process.env.CLIENT_PORT } }));
+// app.use(cors({ origin: process.env.CLIENT_PORT }));
+app.use(cors());
+app.use(bodyParser.json());
+
+
 app.use("/api", apiRouter);
 
 app.get("/", (req, res) => {
@@ -22,6 +29,7 @@ app.get("/", (req, res) => {
       res.send("I dont know");
   }
 });
+
 export const server = http.createServer(app);
 
 export const io = new Server(server, {

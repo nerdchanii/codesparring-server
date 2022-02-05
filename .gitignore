@@ -1,5 +1,12 @@
+# for modules
 node_modules
+
 .babelrc
+# for hiidden
 mock
 api
 .env
+
+# forworkbench
+.idea
+.vscode
