@@ -6,6 +6,8 @@ import { Server } from "socket.io";
 import dotenv from "dotenv";
 import socket from "./socket/socket.js";
 import bodyParser from "body-parser";
+import mysql from "mysql2"; // mysql 사용
+import dbconfig from "./db/dbconfig.js";
 
 dotenv.config("./.env");
 
@@ -13,23 +15,16 @@ export const app = express();
 // app.use(cors({ origin: process.env.CLIENT_PORT }));
 app.use(cors());
 app.use(bodyParser.json());
-
+app.options("*", cors());
 
 app.use("/api", apiRouter);
 
-app.get("/", (req, res) => {
-  switch (process.env.NODE_ENV) {
-    case "test":
-      res.send("test");
-      break;
-    case "dev":
-      res.send("dev");
-      break;
-    default:
-      res.send("I dont know");
-  }
-});
+export const DB = {
+  // problemDB: mysql.createPool({ ...dbconfig, database: "problem" }),
+  mainDB: mysql.createPool({ ...dbconfig, database: "codesparring" }),
+};
 
+// socket io
 export const server = http.createServer(app);
 
 export const io = new Server(server, {
