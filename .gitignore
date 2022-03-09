@@ -6,6 +6,8 @@ node_modules
 mock
 api
 .env
+db/db.config.js
+
 
 # forworkbench
 .idea

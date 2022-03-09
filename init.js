@@ -7,7 +7,6 @@ import dotenv from "dotenv";
 import socket from "./socket/socket.js";
 import bodyParser from "body-parser";
 import mysql from "mysql2"; // mysql 사용
-import dbconfig from "./db/dbconfig.js";
 
 dotenv.config("./.env");
 
@@ -18,11 +17,6 @@ app.use(bodyParser.json());
 app.options("*", cors());
 
 app.use("/api", apiRouter);
-
-export const DB = {
-  // problemDB: mysql.createPool({ ...dbconfig, database: "problem" }),
-  mainDB: mysql.createPool({ ...dbconfig, database: "codesparring" }),
-};
 
 // socket io
 export const server = http.createServer(app);
