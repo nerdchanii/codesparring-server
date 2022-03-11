@@ -1,0 +1,67 @@
+[
+  {
+    "RoomId": 1,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 2,
+    "RoomTitle": "너JAVA봐라",
+    "inRoom": 4
+  },
+  {
+    "RoomId": 3,
+    "RoomTitle": "이거JAVA봐라",
+    "inRoom": 3
+  },
+  {
+    "RoomId": 4,
+    "RoomTitle": "나JAVASCRIPT봐라",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 5,
+    "RoomTitle": "메롱PYTHON",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 6,
+    "RoomTitle": "투혼 고수만",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 7,
+    "RoomTitle": "개꼰대셔놀리는모임",
+    "inRoom": 4
+  },
+  {
+    "RoomId": 8,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 9,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 10,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 2
+  },
+  {
+    "RoomId": 11,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 4
+  },
+  {
+    "RoomId": 12,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 4
+  },
+  {
+    "RoomId": 13,
+    "RoomTitle": "나JAVA봐라",
+    "inRoom": 2
+  }
+]

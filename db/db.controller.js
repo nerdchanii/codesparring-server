@@ -24,7 +24,19 @@ export async function insertRows(sql) {
     return true;
   } catch (e) {
     console.log(e);
+    throw e;
     return false;
   }
 }
+
+export async function deleteRow(sql) {
+  try {
+    const Result = await pool.query(sql);
+    return true;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
 export default pool;

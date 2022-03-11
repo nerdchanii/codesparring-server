@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import socket from "./socket/socket.js";
 import bodyParser from "body-parser";
 import mysql from "mysql2"; // mysql 사용
+import { varifyAccessToken } from "./middleware/jwt/jwt.js";
 
 dotenv.config("./.env");
 
@@ -38,7 +39,15 @@ io.use((socket, next) => {
 });
 
 //getUserFromToken은 데이버테이스에서 조회하는 로직이 필요
-const getUserFromToken = (token) => token;
+const getUserFromToken = (token) => {
+  try {
+    const { nickName } = varifyAccessToken(token);
+    return nickName;
+  } catch (e) {
+    console.log(token);
+    return token.nickName;
+  }
+};
 
 server.listen(process.env.SERVER_PORT, () => {
   console.log("start", process.env.SERVER_PORT);

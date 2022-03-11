@@ -1,0 +1,54 @@
+import express from "express";
+import {
+  GameList,
+  GameMake,
+  GameJoin,
+  GameLeave,
+} from "./game/Game.controller.js";
+import RankList from "./userRank/RankList.js";
+import ProbelmList from "./Problem/ProblemList.js";
+import ProblemItem from "./Problem/ProblemItem.js";
+import NoticeList from "./notice/notice.js";
+import UserAccount from "./UserAccount/UserAccount.js";
+import getUserAccount from "./UserAccount/getUserAccount.js";
+import deleteUser from "./UserAccount/deleteUser.js";
+import runTestCode from "./codeRouter/runTestCode.js";
+import runSubmitCode from "./codeRouter/runSubmitCode.js";
+import ProblemAdd from "./Problem/ProblemAdd.js";
+import { generateAccessToken } from "../middleware/jwt/jwt.js";
+import login from "./login/login.js";
+const app = express();
+import jwt from "jsonwebtoken";
+
+const apiRouter = express.Router();
+
+//Game
+//이건 방식이 바뀌어야한다. 바보야
+
+apiRouter.get("/game/list", GameList);
+apiRouter.post("/game/make", GameMake);
+apiRouter.post("/game/join/:id", GameJoin);
+apiRouter.post("/game/leave/:id", GameLeave);
+
+//Problem
+apiRouter.post("/Problem/add", ProblemAdd);
+apiRouter.get("/problem", ProbelmList);
+apiRouter.get("/problem/:id", ProblemItem);
+
+//Notice
+apiRouter.get("/notice", NoticeList);
+
+//TODO JWT 받아서 해야하는 것
+//콜백함수는 언제가 getUserAccount로 대체되어야합니다.
+apiRouter.get("/user/profile", getUserAccount);
+apiRouter.delete("/delete/user", deleteUser);
+
+apiRouter.post("/code/test", runTestCode);
+apiRouter.post("/code/submit", runSubmitCode);
+
+//user
+
+apiRouter.get("/user/rank", RankList);
+apiRouter.post("/user/login", login);
+
+export default apiRouter;

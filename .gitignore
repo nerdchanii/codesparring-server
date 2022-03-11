@@ -3,8 +3,7 @@ node_modules
 
 .babelrc
 # for hiidden
-mock
-api
+
 .env
 db/db.config.js
 
