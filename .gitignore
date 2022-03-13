@@ -5,7 +5,7 @@ node_modules
 # for hiidden
 
 .env
-db/db.config.js
+
 
 
 # forworkbench

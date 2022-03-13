@@ -17,8 +17,7 @@ import runSubmitCode from "./codeRouter/runSubmitCode.js";
 import ProblemAdd from "./Problem/ProblemAdd.js";
 import { generateAccessToken } from "../middleware/jwt/jwt.js";
 import login from "./login/login.js";
-const app = express();
-import jwt from "jsonwebtoken";
+import fakelogin from "./login/fakelogin.js";
 
 const apiRouter = express.Router();
 
@@ -50,5 +49,6 @@ apiRouter.post("/code/submit", runSubmitCode);
 
 apiRouter.get("/user/rank", RankList);
 apiRouter.post("/user/login", login);
+apiRouter.post("/user/fake/login", fakelogin);
 
 export default apiRouter;

@@ -24,7 +24,7 @@ export const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_PORT,
+    origin: process.env.CLIENT_HOST,
   },
 });
 io.on("connect", socket);

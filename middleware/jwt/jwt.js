@@ -2,7 +2,7 @@ import e from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
-dotenv.config();
+dotenv.config("./.env");
 
 // 토큰 생성
 export function generateAccessToken(userInfo) {

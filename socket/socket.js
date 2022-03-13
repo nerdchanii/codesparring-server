@@ -1,5 +1,6 @@
 import { io } from "../init.js";
 import { getRows } from "../db/db.controller.js";
+
 const socket = (socket) => {
   socket.on("join", async (room) => {
     socket.join(room);

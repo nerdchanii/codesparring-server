@@ -77,13 +77,21 @@ class RoomList {
   removeRoom(room) {
     if (this.roomList.includes(room)) {
       this.roomList.splice(this.roomList.indexOf(room), 1);
+      this.roomUpdate();
       return true;
     } else {
       return false;
     }
   }
-
+  roomUpdate() {
+    this.roomList.forEach((room) => {
+      if (room.roomUsers.length === 0) {
+        this.removeRoom(room);
+      }
+    });
+  }
   getRoomList() {
+    this.roomUpdate();
     const list = this.roomList.map((r) => {
       return {
         roomUUID: r._id,
