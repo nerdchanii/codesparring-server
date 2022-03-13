@@ -18,9 +18,9 @@ export default async function ProblemAdd(req, res) {
   // \n => \\n \\n \\\\n
 
   const values = [
-    JSON.stringify(title),
+    title,
     level,
-    JSON.stringify(problemType),
+    problemType,
     JSON.stringify(description),
     JSON.stringify(requirement),
     JSON.stringify(testcase),
