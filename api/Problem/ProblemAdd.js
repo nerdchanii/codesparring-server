@@ -1,4 +1,4 @@
-import DB, { insertRows } from "../../db/db.controller.js";
+import DB, { insertProblem } from "../../db/db.controller.js";
 
 const RESULT = {
   SUCCESS: "success",
@@ -13,23 +13,24 @@ export default async function ProblemAdd(req, res) {
   const parsedData = JSON.parse(stringData);
   const { title, level, problemType, requirement, description, testcase } =
     parsedData;
-  const inputs = testcase.map((item) => item.input.replaceAll("\\n", "\\\\n"));
-  const outputs = testcase.map((item) => item.output.replaceAll("\\", "\\\\"));
+  const inputs = testcase.map((item) => item.input);
+  const outputs = testcase.map((item) => item.output);
   // \n => \\n \\n \\\\n
-  const sql = `INSERT
-INTO problem (title, level, type, description, requirement ,testcase, input_case, output_case)
-VALUES (${JSON.stringify(title.replaceAll("\\n", ""))}, 
-${level},  
-${JSON.stringify(problemType)},
-${JSON.stringify(description.replaceAll("\\", "\\\\"))},
-'${JSON.stringify(requirement)}', 
-'${JSON.stringify(testcase).replaceAll("\\", "\\\\")}', 
-'${JSON.stringify(inputs).replaceAll("\\", "\\\\")}',   
-'${JSON.stringify(outputs).replaceAll("\\", "\\\\")}')
-`;
+
+  const values = [
+    JSON.stringify(title),
+    level,
+    JSON.stringify(problemType),
+    JSON.stringify(description),
+    JSON.stringify(requirement),
+    JSON.stringify(testcase),
+    JSON.stringify(inputs),
+    JSON.stringify(outputs),
+  ];
+
   // TODO BUG 문제에 같은 제목의 문제가 있는지 먼저 확인해야합니다.
   try {
-    const result = await insertRows(sql);
+    const result = await insertProblem(values);
     return result
       ? res.status(200).json({ result: RESULT.SUCCESS })
       : res.status(400).json({ result: RESULT.FAIL });

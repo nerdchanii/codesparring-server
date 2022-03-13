@@ -2,6 +2,11 @@ import mysql from "mysql2"; // mysql 사용
 import dbconfig from "./db.config.js";
 import DBconfing from "./db.config.js"; // db 설정
 
+const SQL = {
+  PROBLEM_ADD:
+    "INSERT INTO problem (title, level, type, description, requirement, testcase, input_case, output_case) values(?,?,?,?,?,?,?,?)",
+};
+
 const DB = mysql.createPool({
   ...DBconfing,
   database: "codesparring",
@@ -21,6 +26,19 @@ export async function getRows(sql) {
 export async function insertRows(sql) {
   try {
     const Result = await pool.query(sql);
+    return true;
+  } catch (e) {
+    console.log(e);
+    throw e;
+    return false;
+  }
+}
+
+export async function insertProblem(values) {
+  const sql = SQL.PROBLEM_ADD;
+  try {
+    const Result = await pool.query(sql, values);
+    console.log("insertProblem", Result);
     return true;
   } catch (e) {
     console.log(e);
