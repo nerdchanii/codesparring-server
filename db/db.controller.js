@@ -22,6 +22,15 @@ export async function getRows(sql) {
     console.log(e);
   }
 }
+export async function getProblem(id) {
+  const sql = `SELECT * FROM problem WHERE id = ?`;
+  try {
+    const [rows, fields] = await pool.query(sql, id);
+    return rows;
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 export async function insertRows(sql) {
   try {

@@ -108,8 +108,12 @@ class RoomList {
     return room;
   }
 
-  getRoomByRoomId(roomNumber) {
+  getRoomByRoomNumber(roomNumber) {
     const room = this.roomList.find((r) => r.number === roomNumber);
+    return room;
+  }
+  getRoomById(id) {
+    const room = this.roomList.find((r) => r._id === id);
     return room;
   }
 
