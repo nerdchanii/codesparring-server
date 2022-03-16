@@ -9,7 +9,7 @@ class Room {
   number = 0;
 
   constructor(title, roomNumber) {
-    this._id = uuid();
+    this._id = `ROOM_ID_${Math.floor(Math.random() * 100)}`;
     this.MAX_USER = 4;
     this.roomUsers = [];
     this.number = roomNumber;

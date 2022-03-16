@@ -27,7 +27,6 @@ export const io = new Server(server, {
     origin: process.env.CLIENT_HOST,
   },
 });
-io.on("connect", socket);
 
 io.use((socket, next) => {
   if (socket.handshake.auth.token) {
@@ -38,6 +37,7 @@ io.use((socket, next) => {
   }
 });
 
+io.on("connect", socket);
 //getUserFromToken은 데이버테이스에서 조회하는 로직이 필요
 const getUserFromToken = (token) => {
   try {

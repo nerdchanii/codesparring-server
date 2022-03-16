@@ -3,22 +3,25 @@ import STATUS from "./utils/status.js";
 import axios from "axios";
 import { readFile } from "fs/promises";
 import postToGlot from "./utils/postToGlot.js";
-import { getRows } from "../../db/db.controller.js";
-
-const SQL = "SELECT input_case, output_case FROM problem WHERE id = ?";
+import { getProblem } from "../../db/db.controller.js";
 
 // get input, output from DB and return them as array
-async function getData(number) {
-  const rows = getRows(SQL);
-  const { input_case, output_case } = rows[0];
-  return { input_case, output_case };
-}
+// async function getData(number) {
+//   try {
+//     const rows = getProblem(number);
+//     const { input_case, output_case } = rows;
+//     return { input_case, output_case };
+//   } catch (e) {
+//     console.log(e);
+//     throw e;
+//   }
+// }
 
 async function runSubmitCode(req, res) {
   console.log("runSubmitCode");
   const { problemId, lang, code } = req.body;
   try {
-    const row = await getData(problemId);
+    const [row] = await getProblem(problemId);
     const { input_case, output_case } = row;
     // 각각의 input을 전송하고 그 결과를 받아온다.
     const response = await Promise.all(
@@ -52,8 +55,14 @@ async function runSubmitCode(req, res) {
     });
     res.send(result);
   } catch (err) {
-    console.log("error");
-    res.status(500).send(err);
+    console.log("======code submit err ====");
+    console.log(err);
+    return res.status(500).json({
+      err: {
+        message: err.message,
+        name: err.name,
+      },
+    });
   }
 }
 
