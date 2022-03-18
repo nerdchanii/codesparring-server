@@ -1,5 +1,6 @@
 import { io } from "../init.js";
 import { getRows } from "../db/db.controller.js";
+import roomList from "../api/game/index.js";
 
 const USER = {
   CONNECTED: "connected",
@@ -12,12 +13,11 @@ const USER = {
     LEAVE: "leave",
     GAMESTART: "gamestart",
     MESSAGE: "message",
-    UPDATE_ROOM: "updateRoom",
+    UPDATE_USER_LIST: "updateUser",
   },
 };
 
 const socket = (socket) => {
-  console.log(USER.CONNECTED, socket.id);
   socket.on(USER.ACTION.JOIN, async (roomId) => {
     socket.join(roomId);
     joinMessage(socket, roomId);
@@ -27,9 +27,13 @@ const socket = (socket) => {
     sendMessage(socket, msg, room);
   });
 
+  socket.on(USER.ACTION.UPDATE_USER_LIST, (id) => {
+    updateUserList(id, socket);
+  });
   socket.on(USER.ACTION.LEAVE, (room) => {
     socket.leave(room);
     leaveMessage(socket, room);
+    updateUserList(room, socket);
   });
 
   socket.on("gamestart", async ({ room: roomId }) => {
@@ -44,13 +48,19 @@ const socket = (socket) => {
 
 export default socket;
 
+function updateUserList(id, socket) {
+  const room = roomList.getRoomById(id);
+  if (!!room) {
+    const userList = room.getUserList();
+    io.to([socket.id, id]).emit(USER.ACTION.UPDATE_USER_LIST, userList);
+  }
+}
+
 function leaveMessage(socket, room) {
-  console.log("leave socketroom", room);
   sendMessage(socket, `${socket.username}님이 퇴장하셨습니다.`, room);
 }
 
 function joinMessage(socket, room) {
-  console.log("join", room);
   sendMessage(socket, `${socket.username}님이 입장하셨습니다.`, room);
 }
 
@@ -61,7 +71,6 @@ async function gameStart(socket, room) {
 }
 
 function sendMessage(socket, msg, room) {
-  console.log("ROOM:", room, msg);
   io.to([socket.id, room]).emit("message", {
     user: socket.username,
     message: msg,
