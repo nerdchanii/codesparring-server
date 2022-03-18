@@ -43,7 +43,6 @@ async function getUserAccount(req, res) {
   } catch (e) {
     switch (e.name) {
       case "TokenExpiredError":
-        console.log("Errrrr");
         return res.status(401).send({
           result: "TokenExpiredError",
         });

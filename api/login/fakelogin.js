@@ -1,11 +1,7 @@
 import jwt from "jsonwebtoken";
 import { uuid } from "uuidv4";
 import { getRows, insertRows } from "../../db/db.controller.js";
-import {
-  varifyAccessToken,
-  refreshAccessToken,
-  generateAccessToken,
-} from "../../middleware/jwt/jwt.js";
+import { varifyAccessToken, refreshAccessToken, generateAccessToken } from "../../middleware/jwt/jwt.js";
 
 const USER_CHECK = (id) => {
   return `SELECT * FROM user WHERE user_naver_id = '${id}'`;
@@ -21,7 +17,6 @@ function ADD_USER(userInfo) {
 async function usercheck(id) {
   const sql = USER_CHECK(id);
   const [rows] = await getRows(sql);
-  console.log(rows);
   return !!rows;
 }
 

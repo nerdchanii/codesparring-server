@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
 import { getRows, insertRows } from "../../db/db.controller.js";
-import {
-  varifyAccessToken,
-  refreshAccessToken,
-  generateAccessToken,
-} from "../../middleware/jwt/jwt.js";
+import { varifyAccessToken, refreshAccessToken, generateAccessToken } from "../../middleware/jwt/jwt.js";
 
 const USER_CHECK = (id) => {
   return `SELECT * FROM user WHERE user_naver_id = '${id}'`;

@@ -44,7 +44,6 @@ const getUserFromToken = (token) => {
     const { nickName } = varifyAccessToken(token);
     return nickName;
   } catch (e) {
-    console.log(token);
     return token.nickName;
   }
 };
