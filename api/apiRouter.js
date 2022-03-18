@@ -4,6 +4,7 @@ import {
   GameMake,
   GameJoin,
   GameLeave,
+  GameRoomRenew,
 } from "./game/Game.controller.js";
 import RankList from "./userRank/RankList.js";
 import ProbelmList from "./Problem/ProblemList.js";
@@ -28,7 +29,7 @@ apiRouter.get("/game/list", GameList);
 apiRouter.post("/game/make", GameMake);
 apiRouter.post("/game/join/:id", GameJoin);
 apiRouter.post("/game/leave/:id", GameLeave);
-
+apiRouter.get("/game/renew/:roomId", GameRoomRenew);
 //Problem
 apiRouter.post("/Problem/add", ProblemAdd);
 apiRouter.get("/problem", ProbelmList);

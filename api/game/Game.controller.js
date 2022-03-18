@@ -1,8 +1,8 @@
-import { Socket } from "socket.io";
 import socket from "../../socket/socket.js";
 import roomlist from "./index.js";
 
 export function GameList(req, res) {
+  roomlist.roomUpdate();
   const list = roomlist.getRoomList();
   return res.send(list);
 }
@@ -27,7 +27,7 @@ export function GameMake(req, res) {
 export function GameJoin(req, res) {
   const id = req.params.id;
   const token = req.headers?.authorization;
-  const room = roomlist.getRoomByRoomId(parseInt(id));
+  const room = roomlist.getRoomByRoomNumber(parseInt(id));
   if (token === "null") {
     return res.sendStatus(401);
   }
@@ -36,13 +36,16 @@ export function GameJoin(req, res) {
     return res.sendStatus(400);
   }
   try {
-    room.addUser(token);
-    return res.status(200).json({
-      roomNumber: room.number,
-      roomTitle: room.roomTitle,
-      userList: room.getUserList(),
-      roomId: room._id,
-    });
+    const result = room.addUser(token);
+    if (result) {
+      return res.status(200).json({
+        roomNumber: room.number,
+        roomTitle: room.roomTitle,
+        userList: room.getUserList(),
+        roomId: room._id,
+      });
+    }
+    return res.sendStatus(400);
   } catch (e) {
     if (e.name === "TokenExpiredError") {
       return res.sendStatus(401);
@@ -53,18 +56,20 @@ export function GameJoin(req, res) {
 
 export function GameLeave(req, res) {
   const token = req.headers?.authorization;
-  console.log("leave");
+
+  console.log("leave Game");
   if (token === "null") {
     // 추후에 여기서 유저 업데이트를 소켓 룸의 인원을 기점으로 수행한다.
     return res.sendStatus(401);
   }
-  const room = roomlist.getRoomByRoomId(parseInt(req.params.id));
+  const room = roomlist.getRoomByRoomNumber(parseInt(req.params.id));
   if (!room) {
     console.log("Room Not Exist");
     return res.sendStatus(400);
   }
   try {
     room.removeUser(token);
+    io.to([room._id]).emit("updateRoom", room._id);
     return res.sendStatus(200);
   } catch (e) {
     if (e.name === "TokenExpiredError") {
@@ -72,4 +77,24 @@ export function GameLeave(req, res) {
     }
     return res.sendStatus(500);
   }
+}
+
+export function GameRoomRenew(req, res) {
+  const token = req.headers?.authorization;
+  console.log("renew");
+  if (token === "null") {
+    return res.sendStatus(401);
+  }
+  // get Room by id ( id is roomId)
+  const room = roomlist.getRoomById(req.params.roomId);
+  if (!room) {
+    console.log("Room Not Exist");
+    return res.sendStatus(400);
+  }
+  return res.status(200).json({
+    roomNumber: room.number,
+    roomTitle: room.roomTitle,
+    userList: room.getUserList(),
+    roomId: room._id,
+  });
 }

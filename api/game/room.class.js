@@ -9,7 +9,7 @@ class Room {
   number = 0;
 
   constructor(title, roomNumber) {
-    this._id = uuid();
+    this._id = `ROOM_ID_${Math.floor(Math.random() * 100)}`;
     this.MAX_USER = 4;
     this.roomUsers = [];
     this.number = roomNumber;
@@ -108,8 +108,12 @@ class RoomList {
     return room;
   }
 
-  getRoomByRoomId(roomNumber) {
+  getRoomByRoomNumber(roomNumber) {
     const room = this.roomList.find((r) => r.number === roomNumber);
+    return room;
+  }
+  getRoomById(id) {
+    const room = this.roomList.find((r) => r._id === id);
     return room;
   }
 
