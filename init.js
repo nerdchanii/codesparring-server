@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import socket from "./socket/socket.js";
 import bodyParser from "body-parser";
 import mysql from "mysql2"; // mysql 사용
-import { varifyAccessToken } from "./middleware/jwt/jwt.js";
+import { varifyAccessToken } from "./src/middleware/jwt/jwt.js";
 
 dotenv.config("./.env");
 

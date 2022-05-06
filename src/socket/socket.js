@@ -1,4 +1,4 @@
-import { io } from "../init.js";
+import { io } from "../../init.js";
 import { getRows } from "../db/db.controller.js";
 import roomList from "../api/game/index.js";
 
