@@ -1,0 +1,5 @@
+export const HTTP_CODE = {
+  OK: "OK",
+  INTERVAL_SERVER_ERROR: "INTERVAL_SERVER_ERROR",
+}
+

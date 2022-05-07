@@ -5,13 +5,14 @@ dotenv.config();
 /**
  * Module dependencies.
  */
-import app from '../app';
+import app from '../src/app';
 import http from 'http';
 
 /**
  * Get port from environment and store in Express.
  */
 const port = normalizePort(process.env.PORT || '4000');
+console.log(app, port);
 app.set('port', port);
 /**
  * Create HTTP server.
