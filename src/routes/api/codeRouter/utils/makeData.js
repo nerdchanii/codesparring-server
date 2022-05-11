@@ -29,7 +29,7 @@ export const makeData = (stdin, lang, code) => {
         name: `solution.${ext}`,
         content: code,
       },
-    ],
+  ],
   };
 };
 

@@ -2,32 +2,40 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon init.js --exec babel-node"
+    "start": "nodemon --experimental-modules --es-module-specifier-resolution=node ./bin/www.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/node": "^7.16.8",
+    "@babel/node": "^7.17.10",
     "axios": "^0.25.0",
     "body-parser": "^1.19.1",
+    "cookie-parser": "^1.4.6",
+    "core-js": "^3.22.4",
     "cors": "^2.8.5",
+    "debug": "^4.3.4",
     "dotenv": "^15.0.1",
+    "ejs": "^3.1.7",
     "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.15",
     "request": "^2.88.2",
     "socket.io": "^4.4.1",
     "uuidv4": "^6.2.12"
   },
-  "type": "module",
   "devDependencies": {
-    "@babel/cli": "^7.16.8",
-    "@babel/core": "^7.16.12",
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-env": "^7.17.10",
     "babel-loader": "^8.2.3"
   }
+
 }

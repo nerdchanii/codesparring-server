@@ -24,6 +24,13 @@ const apiRouter = express.Router();
 
 //Game
 //이건 방식이 바뀌어야한다. 바보야
+// get /game
+// post /game
+// get /game/:id
+// pos /game/:id
+
+
+
 
 apiRouter.get("/game/list", GameList);
 apiRouter.post("/game/make", GameMake);
@@ -34,6 +41,9 @@ apiRouter.get("/game/renew/:roomId", GameRoomRenew);
 apiRouter.post("/Problem/add", ProblemAdd);
 apiRouter.get("/problem", ProbelmList);
 apiRouter.get("/problem/:id", ProblemItem);
+// post problem
+// get problem
+// get problem/:id
 
 //Notice
 apiRouter.get("/notice", NoticeList);
@@ -43,11 +53,22 @@ apiRouter.get("/notice", NoticeList);
 apiRouter.get("/user/profile", getUserAccount);
 apiRouter.delete("/delete/user", deleteUser);
 
+// get /user/:name
+// put /user/:name
+// delete /user
+
+
+// post /code/test
+// post /code/submit
+
+
+
 apiRouter.post("/code/test", runTestCode);
 apiRouter.post("/code/submit", runSubmitCode);
 
 //user
-
+// get /users/rank
+// post /users/login
 apiRouter.get("/user/rank", RankList);
 apiRouter.post("/user/login", login);
 apiRouter.post("/user/fake/login", fakelogin);

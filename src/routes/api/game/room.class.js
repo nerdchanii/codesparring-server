@@ -1,6 +1,6 @@
 import { uuid } from "uuidv4";
 // import socket from "../../socket/socket";
-import { varifyAccessToken } from "../../middleware/jwt/jwt.js";
+import { varifyAccessToken } from "../../../middleware/jwt/jwt";
 
 class Room {
   _id = 0;
