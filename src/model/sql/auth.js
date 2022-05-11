@@ -1,11 +1,7 @@
-export default class Auth{
-  constructor(){
+export default class Auth {
+  constructor() {}
 
+  getUser({ email }) {
+    return ['SELECT * FROM users WHERE email = ?', [email]];
   }
-  
-  checkUser({email}){
-    return ('SELECT * FROM users WHERE email = ?', [email]);
-  }
-
-
 }

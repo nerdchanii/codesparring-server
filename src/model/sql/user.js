@@ -1,31 +1,35 @@
-export default class User{
-  constructor(){
+export default class User {
+  constructor() {}
 
-  }
-  
-  getUser({id}){
-    return ('SELECT * FROM users WHERE username = ?', [id]);
+  getUser({ nickname }) {
+    return ['SELECT nickname, points FROM users WHERE nickname = ?', [nickname]];
   }
 
-  getUsers(){
-    return ('SELECT * FROM users');
+  getUsers() {
+    return ['SELECT user_id as userId, nickname, points, email FROM users'];
   }
 
-  createUser({name, email, password}){
-    return ('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password]);
+  getRanks() {
+    return ['SELECT user_id as userId, nickname, points, email FROM users ORDER BY points DESC'];
   }
 
-  removeUser({id}){
-    return ('DELETE FROM users WHERE username = ?', [id]);
+  createUser({ nickname, email, salt, password }) {
+    return [
+      'INSERT INTO users (nickname, email, salt, password) VALUES (?, ?, ?, ?)',
+      [nickname, email, salt, password],
+    ];
+  }
+
+  removeUser({ userId }) {
+    return ['DELETE FROM users WHERE user_id = ?', [userId]];
   }
 
   // 이미 등록된 이메일인지 확인
-  isExistEmail({email}){
-    return ('SELECT * FROM users WHERE email = ?', [email]);
+  isExistEmail({ email }) {
+    return ['SELECT email FROM users WHERE email = ?', [email]];
   }
 
-  isExistNickname({nickname}){
-    return ('SELECT * FROM users WHERE nickname = ?', [nickname]);
+  isExistNickname({ nickname }) {
+    return ['SELECT nickname FROM users WHERE nickname = ?', [nickname]];
   }
-
 }

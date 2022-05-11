@@ -1,42 +1,52 @@
-export default class UserModel{
-  constructor({pool, sql}){
+export default class UserModel {
+  constructor({ pool, sql }) {
     this._pool = pool;
     this._sql = sql;
   }
 
-  
-  async getUser({id}){
-    const [sql, params] = this._sql.users.getUser({id});
-    const [rows, fields] = this._pool.query(sql, params);
+  getUser = async ({ nickname }) => {
+    const [sql, params] = this._sql.user.getUser({ nickname });
+    const [[rows], fields] = await this._pool.query(sql, params);
     return rows;
-  }
+  };
 
-  async getUsers(){
-    const [sql] = this._sql.users.getUsers();
-    const [rows, fields] = this._pool.query(sql);
+  getUsers = async () => {
+    const [sql] = this._sql.user.getUsers();
+    const [rows, fields] = await this._pool.query(sql);
     return rows;
-  }
-  
-  async createUser({nickname, email, password}){
-    const [sql, params] = this._sql.users.createUser({nickname, email, password});
-    const [rows, fields] = this._pool.query(sql, params);
-    return rows;
-  }
+  };
 
-  async removeUser({id}){
-    const [sql, params] = this._sql.users.removeUser({id});
-    const [rows, fields] = this._pool.query(sql, params);
+  getRanks = async () => {
+    const [sql] = this._sql.user.getRanks();
+    const [rows, fields] = await this._pool.query(sql);
     return rows;
-  }
-  async isExistEmail({email}){
-    const [sql, params] = this._sql.users.isExistEmail(email);
-    const [rows, fields] = this._pool.query(sql, params);
-    return rows;
-  }
-  async isExistNickname({nickname}){
-    const [sql, params] = this._sql.users.isExistNickname({nickname});
-    const [rows, fields] = this._pool.query(sql, params);
-    return rows;
+  };
 
-  }
+  createUser = async ({ nickname, email, salt, password }) => {
+    const [sql, params] = this._sql.user.createUser({ nickname, email, salt, password });
+    try {
+      const [{ serverStatus, warningStatus }, field] = await this._pool.query(sql, params);
+      console.log(serverStatus, warningStatus);
+      return serverStatus === 2 && warningStatus === 0;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  removeUser = async ({ userId }) => {
+    const [sql, params] = this._sql.user.removeUser({ userId });
+    const [{ affectedRows }, fields] = await this._pool.query(sql, params);
+    return affectedRows === 1;
+  };
+
+  isExistEmail = async ({ email }) => {
+    const [sql, params] = this._sql.user.isExistEmail({ email });
+    const [rows, fields] = await this._pool.query(sql, params);
+    return rows && rows.length > 0;
+  };
+  isExistNickname = async ({ nickname }) => {
+    const [sql, params] = this._sql.user.isExistNickname({ nickname });
+    const [rows, fields] = await this._pool.query(sql, params);
+    return rows && rows.length > 0;
+  };
 }

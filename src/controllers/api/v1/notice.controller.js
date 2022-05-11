@@ -1,46 +1,63 @@
+import { HTTP_CODE } from '../../../constants/http.constants';
+
 export default class NoticeController {
-  constructor(service) {
+  constructor({ service }) {
     this._service = service;
   }
-  
+
   get service() {
     return this._service;
   }
 
-  getNotices = function(req, res) {
-    this.service.getNotices();
-    res.json({});
-  }
+  getNotices = async (req, res) => {
+    const notices = await this.service.getNotices();
+    res.json({
+      code: HTTP_CODE.OK,
+      result: {
+        notices,
+      },
+    });
+  };
 
-  createNotice = function(req, res) {
-    const { data } = req.body;
-    this.service.createNotice({data});
-    res.json({});
-  }
+  createNotice = async (req, res) => {
+    const { title, label, contents } = req.body;
+    const result = await this.service.createNotice({ title, label, contents });
+    res.json({
+      code: HTTP_CODE.OK,
+      result,
+    });
+  };
 
-  getNotice = function(req, res) {
-    const { noticeId } = req.body; 
-    this.service.getNotice({id: noticeId});
-    res.json({});
-  }
+  getNotice = async (req, res) => {
+    const { id } = req.params;
+    const notice = await this.service.getNotice({ id });
+    res.json({
+      code: HTTP_CODE.OK,
+      result: {
+        notice,
+      },
+    });
+  };
+  Z;
 
-  removeNotice = function(req, res) {
-    const { noticeId } = req.body; 
-    this.service.removeNotice({id: noticeId});
-    res.json({});
-  }
+  removeNotice = async (req, res) => {
+    const { id } = req.params;
+    const result = await this.service.removeNotice({ id });
+    res.json({
+      code: HTTP_CODE.OK,
+      result,
+    });
+  };
 
-  
-
-  updateNotice = function(req, res) {
-    const { noticeId, data } = req.body; 
-    this.service.updateNotice({id: noticeId, data});
-    res.json({});
-    
-  }
-
-
-
-
-   
+  updateNotice = async (req, res) => {
+    // TODO
+    // 이거 어드민 핸들러 타고가게 해야함
+    const { id } = req.params;
+    const { title, label, contents } = req.body;
+    const result = await this.service.updateNotice({ id, title, label, contents });
+    res.json({
+      code: HTTP_CODE.OK,
+      result,
+    });
+  };
 }

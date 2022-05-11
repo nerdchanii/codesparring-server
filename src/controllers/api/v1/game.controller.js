@@ -1,26 +1,37 @@
+import { HTTP_CODE } from '../../../constants/http.constants';
+
 export default class GameController {
-  constructor(service) {
+  constructor({ service }) {
     this._service = service;
   }
 
-  createRoom = function(req, res) {
-    // each controller
-    res.json({ code: HTTP_CODE.OK, result: { } })
+  get service() {
+    return this._service;
   }
 
-  getRooms = function(req, res) {
-    // each controller
-    res.json({ code: HTTP_CODE.OK, result: { } })
-  }
+  createRoom = (req, res) => {
+    const { nickname } = req.body;
+    const room = this.service.createRoom({ nickname });
+    res.json({ code: HTTP_CODE.OK, result: room });
+  };
 
-  joinRoom = function(req, res) {
-    // each controller
-    res.json({ code: HTTP_CODE.OK, result: { } })
-  }
+  getRooms = (req, res) => {
+    const rooms = this.service.getRooms();
+    res.json({ code: HTTP_CODE.OK, result: rooms });
+  };
 
-  leaveRoom = function(req, res) {
-    // each controller
-    res.json({ code: HTTP_CODE.OK, result: { }
-    })
-  }
+  joinRoom = (req, res) => {
+    const { id } = req.params;
+    const { nickname } = req.body;
+    const room = this.service.joinRoom({ id, nickname });
+    res.json({ code: HTTP_CODE.OK, result: room });
+  };
+
+  leaveRoom = (req, res) => {
+    const { id } = req.params;
+    const { nickname } = req.body;
+    const result = this.service.leaveRoom({ id, nickname });
+
+    res.json({ code: HTTP_CODE.OK, result });
+  };
 }

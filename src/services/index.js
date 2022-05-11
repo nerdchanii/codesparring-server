@@ -6,41 +6,36 @@ import NoticeService from './notice.service';
 import UserService from './user.service';
 import GameService from './game.service';
 
-
-class Service{
-  constructor(){
+class Service {
+  constructor() {
     this._model = new Model();
-    this._authService = new AuthService(this.model);
-    this._codeService = new CodeService(this.model);
-    this._problemService = new ProblemService(this.model);
-    this._noticeService = new NoticeService(this.model);
-    this._userService = new UserService(this.model);
-    this._gameService = new GameService(this.model);
-
+    this._authService = new AuthService(this.model.auth);
+    this._userService = new UserService({ model: this.model.user, authService: this.authService });
+    this._codeService = new CodeService(this.model.code);
+    this._problemService = new ProblemService(this.model.problem);
+    this._noticeService = new NoticeService(this.model.notice);
+    this._gameService = new GameService(this.model.game);
   }
-  get model(){
+  get model() {
     return this._model;
   }
-  get authService(){
+  get authService() {
     return this._authService;
   }
-  get codeService(){
+  get codeService() {
     return this._codeService;
   }
-  get problemService(){
+  get problemService() {
     return this._problemService;
   }
-  get noticeService(){
+  get noticeService() {
     return this._noticeService;
   }
-  get userService(){
+  get userService() {
     return this._userService;
   }
-  get gameService(){
+  get gameService() {
     return this._gameService;
   }
-
-
-
 }
 export default Service;

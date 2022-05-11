@@ -1,25 +1,27 @@
 export default class GameService {
-  constructor(model){
+  constructor(model) {
     this._model = model;
-    this._rooms = [];
   }
 
   get model() {
     return this._model;
   }
-  createRoom(){
-    return this._model.createRoom();  
-  }
-  getRooms(){
-    return this._model.getRooms();    
-  }
-  joinRoom(){
-    return this._model.joinRoom();
-  
-  }
-  leaveRoom(){
-    return this._model.leaveRoom();
-  }
-  
-    
+  createRoom = ({ nickname }) => {
+    const room = this.model.createRoom({ nickname });
+    return room.info;
+  };
+
+  getRooms = () => {
+    const rooms = this.model.getRooms();
+    const roomsInfo = rooms.map((room) => room.info);
+    return roomsInfo;
+  };
+
+  joinRoom = ({ id, nickname }) => {
+    return this.model.joinRoom({ id, nickname });
+  };
+
+  leaveRoom = () => {
+    return this.model.leaveRoom();
+  };
 }

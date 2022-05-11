@@ -1,35 +1,21 @@
 export default class CodeModel {
   /**
    * @typedef {import('../types').sql} sql
-   * 
-   * @param {*} param0 
+   *
+   * @param {*} param0
    */
-  constructor({pool, sql}) {
+  constructor({ pool, sql }) {
     this._pool = pool;
     this._sql = sql;
   }
 
-  // async insert(table, values) {
-  //   const [sql, params] = this._sql.insert(table, values);
-  //   const [row, fields] = await this._pool.query(sql, params);
-  //   return row;
-  // }
-
-
-
-
-
-
-  get sql(){
+  get sql() {
     return this._sql;
   }
 
-  
-
-
-
-
-
-
-
+  getProblem = async ({ id }) => {
+    const [sql, params] = this.sql.problem.getProblem({ id });
+    const [[row], fileds] = await this._pool.query(sql, params);
+    return row;
+  };
 }

@@ -1,5 +1,5 @@
 // import dotenv from "dotenv";
-import mysql from "mysql2";
+import mysql from 'mysql2';
 
 // dotenv.config();
 
@@ -10,10 +10,10 @@ const config = {
   database: process.env.DB_DATABASE,
   connectionLimit: 10,
 };
-console.log(process.env.DB_DATABASE)
+
 const pool = mysql.createPool({
-  ...config});
+  ...config,
+});
+const promisePool = pool.promise();
 
-export default pool;
-
-
+export default promisePool;

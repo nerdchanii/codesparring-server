@@ -1,15 +1,14 @@
 import createError from 'http-errors';
-import express from "express";
-import path from "path";
-import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
-import logger from "morgan";
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import logger from 'morgan';
 import { fileURLToPath } from 'url';
 
-import { varifyAccessToken } from "./middleware/jwt/jwt.js";
+import { varifyAccessToken } from './middleware/jwt/jwt.js';
 
 // dotenv.config();
-
 
 import indexRouter from './routes/index';
 import apiRouter from './routes/api';
@@ -23,36 +22,30 @@ const app = express();
 // view engine setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.set("views", path.join(__dirname, "views"));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 추후 사라질 것들
 // app.use(cors());
 
-
-
 app.use('/', indexRouter);
-app.use("/api", apiRouter);
+app.use('/api', apiRouter);
 
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
-
 // error handler
-app.use((error, req, res)=>{
+app.use((error, req, res) => {
   res.locals.message = error.message;
   res.locals.error = req.app.get('env') === 'development' ? error : {};
-})
+});
 
 export default app;
 // socket io
