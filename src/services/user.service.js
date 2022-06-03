@@ -11,8 +11,8 @@ export default class UserService {
     return this._authService;
   }
 
-  getUser = async ({ nickname }) => {
-    return await this.model.getUser({ nickname });
+  getUser = async ({ username }) => {
+    return await this.model.getUser({ username });
   };
 
   getUsers = async () => {
@@ -22,11 +22,11 @@ export default class UserService {
     return await this.model.getRanks();
   };
 
-  createUser = async ({ nickname, email, password }) => {
-    if (!(await this.isExistEmail({ email })) && !(await this.isExistNickname({ nickname }))) {
+  createUser = async ({ username, email, password }) => {
+    if (!(await this.isExistEmail({ email })) && !(await this.isExistUsername({ username }))) {
       const { salt, encryptedPassword } = cryptoPassword(password);
       return await this.model.createUser({
-        nickname,
+        username,
         email,
         password: encryptedPassword,
         salt,
@@ -47,7 +47,7 @@ export default class UserService {
     return await this.model.isExistEmail({ email });
   };
   // 이미 등록된 닉네임인지 확인
-  isExistNickname = async ({ nickname }) => {
-    return await this.model.isExistNickname({ nickname });
+  isExistUsername = async ({ username }) => {
+    return await this.model.isExistUsername({ username });
   };
 }

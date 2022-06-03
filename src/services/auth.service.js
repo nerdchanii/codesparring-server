@@ -12,12 +12,12 @@ export default class AuthService {
     const user = await this._model.getUser({ email });
     console.log(user);
     if (user && user.password === decryptoPassword({ password, salt: user.salt })) {
-      const { userId, nickname, email } = user;
-      const token = jwt.createToken({ nickname, email });
+      const { userId, username, email } = user;
+      const token = jwt.createToken({ username, email });
       return {
         userId,
         profile: {
-          nickname,
+          username,
           email,
         },
         token,
@@ -27,9 +27,9 @@ export default class AuthService {
   };
 
   varifyToken = async ({ token }) => {
-    const { nickname, email } = this.jwt.verifyToken(token);
+    const { username, email } = this.jwt.verifyToken(token);
     const [user] = await this._model.getUser({ email });
-    if (user && user.nickname === nickname) {
+    if (user && user.username === username) {
       return true;
     }
     return false;
