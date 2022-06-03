@@ -3,7 +3,7 @@
  *
  */
 export default class Problem {
-  constructor() {}
+  constructor() { }
 
   getProblems = () => {
     return ['SELECT id, title, type, is_stable, not_stable, vote_count FROM problems'];
@@ -58,4 +58,8 @@ export default class Problem {
       ],
     ];
   };
+
+  getRandomProblem = () => {
+    return ['SELECT * FROM problems ORDER BY RAND() LIMIT 1', []];
+  }
 }
