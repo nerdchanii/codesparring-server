@@ -9,22 +9,32 @@ export default class CodeController {
     return this._service;
   }
 
-  codeTest = async (req, res) => {
+  codeTest = async (req, res, next) => {
     const { input, lang, code, output } = req.body;
-    const result = await this._service.codeTest({ input, lang, code, output });
+    try {
+      const result = await this.service.codeTest({ input, lang, code, output });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: result,
+      });
+    } catch (e) {
+      next(e);
+    }
 
-    res.json({
-      code: HTTP_CODE.OK,
-      result: result,
-    });
+
   };
 
-  codeSubmit = async (req, res) => {
+  codeSubmit = async (req, res, next) => {
     const { problemId, lang, code } = req.body;
-    const result = await this.service.codeSubmit({ problemId, lang, code });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: result,
-    });
+    try {
+      const result = await this.service.codeSubmit({ problemId, lang, code });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: result,
+      });
+    } catch (e) {
+      next(e);
+    }
+
   };
 }

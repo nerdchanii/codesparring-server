@@ -1,13 +1,15 @@
+import GameModel from "../model/game.model";
+
 export default class GameService {
-  constructor(model) {
-    this._model = model;
+  constructor() {
+    this._model = new GameModel();
   }
 
   get model() {
     return this._model;
   }
-  createRoom = ({ nickname }) => {
-    const room = this.model.createRoom({ nickname });
+  createRoom = ({ name }) => {
+    const room = this.model.createRoom({ name });
     return room.info;
   };
 
@@ -17,11 +19,23 @@ export default class GameService {
     return roomsInfo;
   };
 
-  joinRoom = ({ id, nickname }) => {
-    return this.model.joinRoom({ id, nickname });
+  joinRoom = ({ id, username }) => {
+    return this.model.joinRoom({ id, username }).info;
   };
 
-  leaveRoom = () => {
-    return this.model.leaveRoom();
+  leaveRoom = ({ id, username }) => {
+    return this.model.leaveRoom({ id, username });
   };
+
+  setProblem = ({ roomId, problem }) => {
+    return this.model.setProblem({ roomId, problem });
+  }
+
+  getProblem = ({ roomId }) => {
+    return this.model.getProblem({ roomId });
+  }
+
+  gameStart = ({ roomId, problem }) => {
+    return this.model.gameStart({ roomId, problem });
+  }
 }

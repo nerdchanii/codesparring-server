@@ -33,4 +33,10 @@ export default class ProblemModel {
     const [{ affectedRows }, fields] = await this.pool.query(sql, params);
     return affectedRows > 0;
   };
+
+  getRandomProblem = async () => {
+    const [sql, params] = this.sql.problem.getRandomProblem();
+    const [[row], fields] = await this.pool.query(sql, params);
+    return row;
+  }
 }

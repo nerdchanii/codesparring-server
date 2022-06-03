@@ -2,7 +2,6 @@ import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import logger from 'morgan';
 import { fileURLToPath } from 'url';
 
@@ -25,14 +24,14 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// morgan logger 
 app.use(logger('dev'));
+
+//body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 추후 사라질 것들
-// app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);

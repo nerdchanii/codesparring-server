@@ -1,79 +1,140 @@
-// import { io } from "../app";
-// import { getRows } from "../db/db.controller";
-// import roomlist from '../routes/api/game/index';
+import { instrument } from "@socket.io/admin-ui";
+import { Server } from "socket.io";
+import ProblemModel from "../model/problem.model";
+import GameService from "../services/game.service";
+import ProblemService from "../services/problem.service";
+import pool from '../config/mysql';
+import Sql from '../model/sql';
 
-// const USER = {
-//   CONNECTED: "connected",
-//   ROOM: {
-//     SPARRING: "sparring",
-//     PRACTICE: "practice",
-//   },
-//   ACTION: {
-//     JOIN: "join",
-//     LEAVE: "leave",
-//     GAMESTART: "gamestart",
-//     MESSAGE: "message",
-//     UPDATE_USER_LIST: "updateUser",
-//   },
-// };
+const USER = {
+  CONNECTED: "connected",
+  ROOM: {
+    SPARRING: "sparring",
+    PRACTICE: "practice",
+  },
+  ACTION: {
+    JOIN: "join",
+    LEAVE: "leave",
+    GAMESTART: "gamestart",
+    MESSAGE: "message",
+    UPDATE_USER_LIST: "updateUserList",
+    CREATE_ROOM: "createRoom",
+    GET_ROOMS: "getRooms",
+  },
+  DEFAULT_ROOM_ID: "Hello World",
+};
 
-// const socket = (socket) => {
-//   socket.on(USER.ACTION.JOIN, async (roomId) => {
-//     socket.join(roomId);
-//     joinMessage(socket, roomId);
-//   });
+export default class SocketIo {
+  constructor(server) {
+    const io = new Server(server, {
+      cors: {
+        origin: ["https://admin.socket.io"],
+        credentials: true,
+      }
+    });
+    instrument(io, {
+      auth: false
+    })
+    this.io = io;
+    this.gameService = new GameService()
+    this.problemService = new ProblemService(new ProblemModel({ pool, sql: new Sql() }));
+  }
 
-//   socket.on(USER.ACTION.MESSAGE, ({ value: msg, room }) => {
-//     sendMessage(socket, msg, room);
-//   });
 
-//   socket.on(USER.ACTION.UPDATE_USER_LIST, (id) => {
-//     updateUserList(id, socket);
-//   });
-//   socket.on(USER.ACTION.LEAVE, (room) => {
-//     socket.leave(room);
-//     leaveMessage(socket, room);
-//     updateUserList(room, socket);
-//   });
+  on() {
 
-//   socket.on("gamestart", async ({ room: roomId }) => {
-//     console.log("gamestart", roomId);
-//     await gameStart(socket, roomId);
-//   });
-//   socket.on("gameRoomJoin", async (roomId) => {
-//     console.log("gameRoomJoin!!!!!!!!!", roomId);
-//     io.to([socket.id, roomId]).emit("roomNeedUpdate", roomId);
-//   });
-// };
+    this.io.on('connect', this.onConnect.bind(this));
+  }
 
-// export default socket;
+  onConnect(socket) {
 
-// function updateUserList(id, socket) {
-//   const room = roomList.getRoomById(id);
-//   if (!!room) {
-//     const userList = room.getUserList();
-//     io.to([socket.id, id]).emit(USER.ACTION.UPDATE_USER_LIST, userList);
-//   }
-// }
+    socket.on(USER.ACTION.JOIN, this.onJoin.bind(this, { socket }));
+    socket.on(USER.ACTION.MESSAGE, this.onMessage.bind(this, { socket }));
+    socket.on(USER.ACTION.LEAVE, this.onLeave.bind(this, { socket }));
+    socket.on(USER.ACTION.CREATE_ROOM, this.onCreateRoom.bind(this, { socket }));
+    socket.on(USER.ACTION.GET_ROOMS, this.onGetRooms.bind(this, { socket }));
+    socket.on(USER.ACTION.GAMESTART, this.onGameStart.bind(this, { socket }));
+  }
 
-// function leaveMessage(socket, room) {
-//   sendMessage(socket, `${socket.username}님이 퇴장하셨습니다.`, room);
-// }
+  onGetRooms({ socket }) {
+    const rooms = this.gameService.getRooms();
+    console.log(rooms, 'rooms');
+    socket.emit(USER.ACTION.GET_ROOMS, { rooms });
+  }
 
-// function joinMessage(socket, room) {
-//   sendMessage(socket, `${socket.username}님이 입장하셨습니다.`, room);
-// }
 
-// async function gameStart(socket, room) {
-//   console.log("gameStart", socket.rooms);
-//   const [row] = await getRows(`SELECT * FROM problem order by rand() limit 1`);
-//   io.to([socket.id, room]).emit("gamestart", row);
-// }
+  onCreateRoom({ socket }, { name }) {
+    const room = this.gameService.createRoom({ name });
+    socket.emit(USER.ACTION.CREATE_ROOM, { room });
+    this.onGetRooms({ socket });
+    console.log(room);
+  }
 
-// function sendMessage(socket, msg, room) {
-//   io.to([socket.id, room]).emit("message", {
-//     user: socket.username,
-//     message: msg,
-//     room,
-//   });
-// }
+  onJoin({ socket }, { username, roomId }) {
+    //join room
+    console.log('room id:', roomId);
+    if (roomId === USER.DEFAULT_ROOM_ID) {
+      socket.join(roomId);
+      console.log("id: ", roomId)
+      this.io.to(roomId).emit(USER.ACTION.JOIN, {
+        room: {
+          id: roomId,
+          name: 'Hello World'
+        }
+      })
+      return;
+    }
+    socket.join(roomId);
+    console.log(`user: ${username} join: ${roomId}`);
+    const room = this.gameService.joinRoom({ id: roomId, username });
+
+    this.io.to(roomId).emit(USER.ACTION.JOIN, {
+      room
+    });
+    if (room.status === 'started') {
+      this.emitGameStart({ roomId: socket.id, problem: room.problem });
+    }
+  }
+
+  onLeave({ socket }, { roomId, username }) {
+    socket.leave(roomId);
+    console.log(`user: ${username} left: ${roomId}`)
+    this.gameService.leaveRoom({ id: roomId, username });
+    this.io.to(roomId).emit(USER.ACTION.LEAVE, {
+      username,
+    });
+    this.emitMessage({
+      username,
+      roomId,
+      message: `${username}님이 나갔습니다.`
+    })
+
+  }
+
+  async onGameStart({ socket }, { roomId, username }) {
+    console.log('game start');
+    const problem = await this.problemService.getRandomProblem();
+    this.gameService.gameStart({ roomId, problem });
+    this.emitGameStart({ roomId, problem });
+  }
+
+  emitGameStart({ roomId }) {
+    return this.io.to(roomId).emit(USER.ACTION.GAMESTART, { problem: this.gameService.getProblem({ roomId }) });
+  }
+
+  onMessage = ({ socket }, { username, roomId, message }) => {
+    console.log(socket?.handshake?.auth);
+    console.log(username, roomId, message);
+
+    this.emitMessage({ username, roomId, message });
+  }
+
+  emitMessage({ username, roomId, message }) {
+
+    this.io.to(roomId).emit(USER.ACTION.MESSAGE, { username, message });
+  }
+
+  // initializeSocketRoom({ socket }) {
+
+  // }
+}

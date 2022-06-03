@@ -1,5 +1,6 @@
 #!/user/bin/env node
 import dotenv from 'dotenv';
+import SocketIo from '../src/socket/socket';
 dotenv.config();
 
 /**
@@ -17,7 +18,11 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-const server = http.createServer(app);
+export const server = http.createServer(app);
+const io = new SocketIo(server);
+io.on();
+
+
 /**
  * Listen on provided port, on all network interfaces.
  */

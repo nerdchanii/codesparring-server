@@ -1,7 +1,7 @@
 // import dotenv from "dotenv";
 import mysql from 'mysql2';
-
-// dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const config = {
   host: process.env.DB_HOST,

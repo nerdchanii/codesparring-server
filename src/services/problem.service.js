@@ -22,4 +22,9 @@ export default class ProblemService {
   updateProblem = async (data) => {
     return await this.model.updateProblem({ id: data.id, data: data });
   };
+
+  getRandomProblem = async () => {
+    return await this.model.getRandomProblem();
+  }
+
 }

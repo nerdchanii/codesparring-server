@@ -59,6 +59,12 @@ export default class CodeService {
 
   parseStdout = (str) => {
     const string = str.trim().replace(/\'/g, '"');
-    return JSON.parse(string);
+    try {
+      string = JSON.parse(string);
+      return string;
+    } catch (e) {
+      return string;
+    }
+
   };
 }
