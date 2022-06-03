@@ -2,8 +2,8 @@
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, JWT_SIGN_OPTION } from '../config/jwt';
 
-const createToken = ({ nickname, email }) => {
-  return jwt.sign({ nickname, email }, JWT_SECRET, JWT_SIGN_OPTION);
+const createToken = ({ username, email }) => {
+  return jwt.sign({ username, email }, JWT_SECRET, JWT_SIGN_OPTION);
 };
 
 const verifyToken = (token) => {
@@ -11,13 +11,13 @@ const verifyToken = (token) => {
 };
 
 const decodeToken = (token) => {
-  const { email, nickName } = jwt.decode(token, JWT_SECRET);
-  return { email, nickName };
+  const { email, username } = jwt.decode(token, JWT_SECRET);
+  return { email, username };
 };
 
 const refreshToken = (token) => {
-  const { email, nickName } = this.decodeToken(token);
-  const newToken = jwt.sign({ email, nickName }, JWT_SECRET);
+  const { email, username } = this.decodeToken(token);
+  const newToken = jwt.sign({ email, username }, JWT_SECRET);
   return newToken;
 };
 

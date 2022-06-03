@@ -21,12 +21,12 @@ export function varifyAccessToken(token) {
 }
 
 export function decodeAccessToken(token) {
-  const { id, nickName } = jwt.decode(token, process.env.TOKEN_SECRET);
-  return { id, nickName };
+  const { id, username } = jwt.decode(token, process.env.TOKEN_SECRET);
+  return { id, username };
 }
 // 유효기간확인
 export function refreshAccessToken(token) {
-  const { id, nickName } = decodeAccessToken(token);
+  const { id, username } = decodeAccessToken(token);
   const newToken = generateAccessToken(id);
   return { result: "REFRESH", token: newToken };
 }

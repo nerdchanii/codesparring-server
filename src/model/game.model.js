@@ -10,13 +10,8 @@ export default class GameModel {
     return this._model;
   }
 
-  createRoom = ({ nickname }) => {
-    const room = new Room({ user: nickname, roomNumber: ++this._roomcount });
-    const otherRoom = this._roomList.find((room) => room.hasUser({ user: nickname }));
-    if (otherRoom) {
-      console.log('user in other room');
-      this.leaveRoom({ nickname, room: otherRoom });
-    }
+  createRoom = ({ name }) => {
+    const room = new Room({ roomNumber: ++this._roomcount, name });
     this._roomList.push(room);
     return room;
   };
@@ -25,29 +20,28 @@ export default class GameModel {
     return this._roomList;
   };
 
-  joinRoom = ({ id, nickname }) => {
+  joinRoom = ({ id, username }) => {
     const room = this._roomList.find((room) => room.id === id);
     if (!room) {
       throw new Error('Room not found');
     }
     // if user in other room then leave that room
-    const otherRoom = this._roomList.find((room) => room.hasUser({ user: nickname }));
+    const otherRoom = this._roomList.find((room) => room.hasUser({ user: username }));
     if (otherRoom) {
-      this.leaveRoom({ id: otherRoom.id, nickname });
+      otherRoom.id == id && this.leaveRoom({ id: otherRoom.id, username });
     }
-    room.addUser({ user: nickname });
+    room.addUser({ user: username });
     return room;
   };
 
-  leaveRoom = ({ id, nickname, room = undefined }) => {
+  leaveRoom = ({ id, username, room = undefined }) => {
     if (room) {
-      room.removeUser({ user: nickname });
+      room.removeUser({ user: username });
     } else {
       room = this._roomList.find((room) => room.id === id);
-      room.removeUser({ user: nickname });
+      room?.removeUser({ user: username });
     }
-    if (room.isEmpty()) {
-      console.log('room is empty');
+    if (room?.isEmpty()) {
       this.deleteRoom({ id: room.id });
     }
     return true;
@@ -58,10 +52,32 @@ export default class GameModel {
     return true;
   };
 
-  userInOtherRoom = ({ nickname }) => {
+  userInOtherRoom = ({ username }) => {
     const userCheck = this._roomList.find((room) =>
-      room.hasUser({ user: nickname }) ? room : false,
+      room.hasUser({ user: username }) ? room : false,
     );
     return userCheck;
   };
+
+  setProblem = ({ roomId, problem }) => {
+    const room = this._roomList.find((room) => room.id === roomId);
+    if (!room) {
+      throw new Error('Room not found');
+    }
+    room.setProblem({ problem });
+    return room;
+  }
+
+  getProblem({ roomId }) {
+    const room = this._roomList.find((room) => room.id === roomId);
+    return room?.problem;
+  }
+
+  gameStart = ({ roomId, problem }) => {
+    const room = this._roomList.find((room) => room.id === roomId);
+    if (!room) {
+      throw new Error('Room not found');
+    }
+    room.gameStart({ problem });
+  }
 }

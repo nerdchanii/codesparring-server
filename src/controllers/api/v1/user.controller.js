@@ -16,8 +16,8 @@ export default class UserController {
   }
 
   getUser = async (req, res) => {
-    const { nickname } = req.params;
-    const user = await this.service.getUser({ nickname });
+    const { username } = req.params;
+    const user = await this.service.getUser({ username });
     res.json({
       code: HTTP_CODE.OK,
       result: {
@@ -45,8 +45,8 @@ export default class UserController {
   };
 
   createUser = async (req, res) => {
-    const { email, nickname, password } = req.body;
-    const result = await this.service.createUser({ nickname, email, password });
+    const { email, username, password } = req.body;
+    const result = await this.service.createUser({ username, email, password });
     res.json({
       code: HTTP_CODE.OK,
       result: result,
@@ -69,9 +69,9 @@ export default class UserController {
       result: result,
     });
   };
-  isExistNickname = async (req, res) => {
-    const { nickname } = req.params;
-    const result = await this.service.isExistNickname({ nickname });
+  isExistUsername = async (req, res) => {
+    const { username } = req.params;
+    const result = await this.service.isExistUsername({ username });
     res.json({
       code: HTTP_CODE.OK,
       result: result,
