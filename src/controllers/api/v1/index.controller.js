@@ -4,7 +4,6 @@ import CodeController from './code.controller';
 import ProblemController from './problem.controller';
 import NoticeController from './notice.controller';
 import UserController from './user.controller';
-import GameController from './game.controller';
 
 class Controllers {
   constructor() {
@@ -14,7 +13,6 @@ class Controllers {
     this._problemController = new ProblemController({ service: this._service.problemService });
     this._noticeController = new NoticeController({ service: this._service.noticeService });
     this._userController = new UserController({ service: this._service.userService });
-    this._gameController = new GameController({ service: this._service.gameService });
   }
 
   get authController() {
