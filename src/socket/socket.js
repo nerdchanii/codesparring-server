@@ -30,7 +30,9 @@ export default class SocketIo {
       cors: {
         origin: ["https://admin.socket.io"],
         credentials: true,
-      }
+      },
+      path: "/socket.io"
+
     });
     instrument(io, {
       auth: false
@@ -59,14 +61,14 @@ export default class SocketIo {
   onGetRooms({ socket }) {
     const rooms = this.gameService.getRooms();
     console.log(rooms, 'rooms');
-    socket.emit(USER.ACTION.GET_ROOMS, { rooms });
+    this.io.emit(USER.ACTION.GET_ROOMS, { rooms });
   }
 
 
   onCreateRoom({ socket }, { name }) {
     const room = this.gameService.createRoom({ name });
     socket.emit(USER.ACTION.CREATE_ROOM, { room });
-    this.onGetRooms({ socket });
+
     console.log(room);
   }
 
@@ -75,31 +77,36 @@ export default class SocketIo {
     console.log('room id:', roomId);
     if (roomId === USER.DEFAULT_ROOM_ID) {
       socket.join(roomId);
-      console.log("id: ", roomId)
       this.io.to(roomId).emit(USER.ACTION.JOIN, {
         room: {
           id: roomId,
           name: 'Hello World'
         }
       })
-      return;
-    }
-    socket.join(roomId);
-    console.log(`user: ${username} join: ${roomId}`);
-    const room = this.gameService.joinRoom({ id: roomId, username });
 
-    this.io.to(roomId).emit(USER.ACTION.JOIN, {
-      room
-    });
-    if (room.status === 'started') {
-      this.emitGameStart({ roomId: socket.id, problem: room.problem });
+    } else {
+      socket.join(roomId);
+      const room = this.gameService.joinRoom({ id: roomId, username });
+      this.io.to(roomId).emit(USER.ACTION.JOIN, {
+        room
+      });
+      if (room.status === 'playing') {
+        this.emitGameStart({ roomId: socket.id, problem: room.problem });
+      }
+      this.onGetRooms({ socket });
     }
+    //send welcome message
+    this.emitMessage({
+      username,
+      roomId,
+      message: `${username} has joined the room`
+    });
   }
 
   onLeave({ socket }, { roomId, username }) {
-    socket.leave(roomId);
     console.log(`user: ${username} left: ${roomId}`)
     this.gameService.leaveRoom({ id: roomId, username });
+    socket.leave(roomId);
     this.io.to(roomId).emit(USER.ACTION.LEAVE, {
       username,
     });
@@ -114,6 +121,7 @@ export default class SocketIo {
   async onGameStart({ socket }, { roomId, username }) {
     console.log('game start');
     const problem = await this.problemService.getRandomProblem();
+    this.gameService.setProblem({ roomId, problem });
     this.gameService.gameStart({ roomId, problem });
     this.emitGameStart({ roomId, problem });
   }

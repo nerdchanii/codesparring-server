@@ -6,6 +6,7 @@ export default class Room {
     this._id = uuid();
     this._userList = [];
     this._roomNumber = roomNumber;
+    /** @type {'playing'| 'waiting' | null} _status */
     this._status = 'waiting';
     this._problem = null;
 
@@ -42,6 +43,7 @@ export default class Room {
       name: this.name,
       roomNumber: this._roomNumber,
       status: this._status,
+      problem: this._problem,
 
     };
   }
