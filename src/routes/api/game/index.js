@@ -1,5 +1,4 @@
-import { Room, RoomList } from "./room.class.js";
-import { uuid } from "uuidv4";
+import { RoomList } from "./room.class.js";
 const roomList = new RoomList();
 
 export default roomList;
