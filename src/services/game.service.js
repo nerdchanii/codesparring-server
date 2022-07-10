@@ -38,4 +38,9 @@ export default class GameService {
   gameStart = ({ roomId, problem }) => {
     return this.model.gameStart({ roomId, problem });
   }
+
+  gameEnd = ({ roomId }) => {
+    return this.model.gameEnd({ roomId });
+  }
+
 }

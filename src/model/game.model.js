@@ -80,4 +80,9 @@ export default class GameModel {
     }
     room.gameStart({ problem });
   }
+
+  gameEnd = ({ roomId }) => {
+    const room = this._roomList.find((room) => room.id === roomId);
+    room?.gameEnd();
+  }
 }
