@@ -67,4 +67,8 @@ export default class Room {
     this._problem = problem;
     this._status = 'playing';
   }
+
+  gameEnd = () => {
+    this._status = 'waiting';
+  }
 }

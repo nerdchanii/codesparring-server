@@ -5,6 +5,8 @@ import GameService from "../services/game.service";
 import ProblemService from "../services/problem.service";
 import pool from '../config/mysql';
 import Sql from '../model/sql';
+import CodeService from "../services/code.service";
+import CodeModel from "../model/code.model";
 
 const USER = {
   CONNECTED: "connected",
@@ -20,6 +22,9 @@ const USER = {
     UPDATE_USER_LIST: "updateUserList",
     CREATE_ROOM: "createRoom",
     GET_ROOMS: "getRooms",
+    CODE_TEST: "codeTest",
+    CODE_SUBMIT: "codeSubmit",
+    GAME_END: "gameEnd",
   },
   DEFAULT_ROOM_ID: "Hello World",
 };
@@ -37,9 +42,11 @@ export default class SocketIo {
     instrument(io, {
       auth: false
     })
+    const sql = new Sql();
     this.io = io;
     this.gameService = new GameService()
-    this.problemService = new ProblemService(new ProblemModel({ pool, sql: new Sql() }));
+    this.problemService = new ProblemService(new ProblemModel({ pool, sql }));
+    this.codeService = new CodeService(new CodeModel({ pool, sql }));
   }
 
 
@@ -56,6 +63,8 @@ export default class SocketIo {
     socket.on(USER.ACTION.CREATE_ROOM, this.onCreateRoom.bind(this, { socket }));
     socket.on(USER.ACTION.GET_ROOMS, this.onGetRooms.bind(this, { socket }));
     socket.on(USER.ACTION.GAMESTART, this.onGameStart.bind(this, { socket }));
+    socket.on(USER.ACTION.CODE_TEST, this.onCodeTest.bind(this, { socket }));
+    socket.on(USER.ACTION.CODE_SUBMIT, this.onCodeSubmit.bind(this, { socket }));
   }
 
   onGetRooms({ socket }) {
@@ -134,15 +143,60 @@ export default class SocketIo {
     console.log(socket?.handshake?.auth);
     console.log(username, roomId, message);
 
-    this.emitMessage({ username, roomId, message });
+    this.emitMessage({ socket, username, roomId, message });
   }
 
-  emitMessage({ username, roomId, message }) {
+  emitMessage({ socket, username, roomId, message }) {
+    // socket.to(socket).emit(USER.ACTION.MESSAGE, { username, message })
 
     this.io.to(roomId).emit(USER.ACTION.MESSAGE, { username, message });
   }
 
-  // initializeSocketRoom({ socket }) {
+  async onCodeTest({ socket }, { roomId, code, lang }) {
+    console.log('on test run');
+    console.log(lang, code);
+    const problem = this.gameService.getProblem({ roomId });
+    console.log(problem);
+    const { test_input, test_output } = problem;
+    const promises = await Promise.allSettled(test_input.map((input, index) => {
+      return this.codeService.codeTest({ lang, code, input, output: test_output[index] })
+    }))
+    const results = promises.map((promise) => promise.value);
+    // const result = await this.codeService.testCode({ lang, code, input: test_input, output: test_output });
+    this.emitCodeTest({ socket, results });
 
-  // }
+  }
+
+  emitCodeTest({ socket, results }) {
+    console.log('return test run');
+    console.log({ results })
+    return this.io.to(socket.id).emit(USER.ACTION.CODE_TEST, { results });
+  }
+
+  async onCodeSubmit({ socket }, { roomId, username, lang, code }) {
+    console.log('submit code');
+    const problem = this.gameService.getProblem({ roomId });
+
+    const results = await this.codeService.codeSubmit({ problemId: problem.id, lang, code });
+    // 하나라도 틀린게 있으면 오류 처리
+    console.log(results)
+    const correct = !results.some(({ correct }) => correct === false);
+    console.log('correct:', correct);
+    this.emitCodeSubmit({ socket, roomId, username, correct });
+  }
+
+  emitCodeSubmit({ socket, roomId, username, correct, results }) {
+    console.log('return submit code');
+    if (correct) {
+      this.gameEnd({ roomId });
+      return this.io.to(roomId).emit(USER.ACTION.CODE_SUBMIT, { username, correct });
+    }
+    return this.io.to(socket.id).emit(USER.ACTION.CODE_SUBMIT, { correct });
+  }
+
+  gameEnd({ roomId }) {
+    console.log('game end', roomId);
+    this.gameService.gameEnd({ roomId });
+    this.io.to(roomId).emit(USER.ACTION.GAME_END);
+  }
 }
