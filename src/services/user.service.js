@@ -50,4 +50,8 @@ export default class UserService {
   isExistUsername = async ({ username }) => {
     return await this.model.isExistUsername({ username });
   };
+
+  updatePoints = async ({ username, point }) => {
+    return await this.model.updatePoints({ username, point });
+  }
 }

@@ -32,4 +32,11 @@ export default class User {
   isExistUsername({ username }) {
     return ['SELECT username FROM users WHERE username = ?', [username]];
   }
+
+  // point UP
+  updatePoints({ username, point }) {
+    return ['UPDATE users SET points = points + ? WHERE username = ?', [point, username]];
+  }
+
+
 }

@@ -7,6 +7,8 @@ import pool from '../config/mysql';
 import Sql from '../model/sql';
 import CodeService from "../services/code.service";
 import CodeModel from "../model/code.model";
+import UserService from "../services/user.service";
+import UserModel from "../model/user.model";
 
 const USER = {
   CONNECTED: "connected",
@@ -47,6 +49,7 @@ export default class SocketIo {
     this.gameService = new GameService()
     this.problemService = new ProblemService(new ProblemModel({ pool, sql }));
     this.codeService = new CodeService(new CodeModel({ pool, sql }));
+    this.userService = new UserService({ model: new UserModel({ pool, sql }) });
   }
 
 
@@ -182,12 +185,18 @@ export default class SocketIo {
     console.log(results)
     const correct = !results.some(({ correct }) => correct === false);
     console.log('correct:', correct);
+    if (correct) {
+      console.log('username:', username);
+      console.log(this.userService._model.sql);
+      await this.userService.updatePoints({ username, point: 15 });
+    }
     this.emitCodeSubmit({ socket, roomId, username, correct });
   }
 
   emitCodeSubmit({ socket, roomId, username, correct, results }) {
     console.log('return submit code');
     if (correct) {
+      // 누군가가 정답을 맞추었을때! 
       this.gameEnd({ roomId });
       return this.io.to(roomId).emit(USER.ACTION.CODE_SUBMIT, { username, correct });
     }

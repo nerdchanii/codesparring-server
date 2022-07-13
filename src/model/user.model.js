@@ -49,4 +49,10 @@ export default class UserModel {
     const [rows, fields] = await this._pool.query(sql, params);
     return rows && rows.length > 0;
   };
+
+  updatePoints = async ({ username, point }) => {
+    const [sql, params] = this._sql.user.updatePoints({ username, point });
+    const [{ affectedRows }, fields] = await this._pool.query(sql, params);
+    return affectedRows === 1;
+  }
 }
