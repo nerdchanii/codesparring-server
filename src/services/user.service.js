@@ -1,4 +1,6 @@
 import { cryptoPassword } from '../utils/crypto';
+import { ForbiddenError, ConflictError } from '../utils/Error';
+import jwt from '../utils/jwt';
 
 export default class UserService {
   constructor({ model }) {
@@ -32,15 +34,19 @@ export default class UserService {
         salt,
       });
     }
-    return false;
-    // } else {
-    // Error 처리
-    // }
+    throw new ConflictError('Email or username is already exist');
+
   };
 
-  removeUser = async ({ userId }) => {
+  removeUser = async ({ userId, token }) => {
+    // 삭제를 요청한 유저와 삭제되는 유저가 같은지 확인
+    const user = await this.model.getUserById({ userId });
+    const { username } = jwt.decodeToken(token);
+    if (user?.username !== username) {
+      throw new ForbiddenError('다른유저의 리소스를 삭제할 수 없습니다.');
+    };
     return await this.model.removeUser({ userId });
-  };
+  }
 
   // 이미 등록된 이메일인지 확인
   isExistEmail = async ({ email }) => {

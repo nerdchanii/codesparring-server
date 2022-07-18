@@ -13,7 +13,7 @@ export default class AuthService {
     console.log(user);
     if (user && user.password === decryptoPassword({ password, salt: user.salt })) {
       const { userId, username, email } = user;
-      const token = jwt.createToken({ username, email });
+      const token = this.jwt.createToken({ username, email });
       return {
         userId,
         profile: {

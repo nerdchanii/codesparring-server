@@ -13,6 +13,10 @@ export default class User {
     return ['SELECT user_id as userId, username, points, email FROM users ORDER BY points DESC'];
   }
 
+  getUserById({ userId }) {
+    return ['SELECT user_id as userId, username, points, email FROM users WHERE user_id = ?', [userId]];
+  }
+
   createUser({ username, email, salt, password }) {
     return [
       'INSERT INTO users (username, email, salt, password) VALUES (?, ?, ?, ?)',

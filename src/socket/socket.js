@@ -59,7 +59,6 @@ export default class SocketIo {
   }
 
   onConnect(socket) {
-
     socket.on(USER.ACTION.JOIN, this.onJoin.bind(this, { socket }));
     socket.on(USER.ACTION.MESSAGE, this.onMessage.bind(this, { socket }));
     socket.on(USER.ACTION.LEAVE, this.onLeave.bind(this, { socket }));
@@ -99,6 +98,11 @@ export default class SocketIo {
     } else {
       socket.join(roomId);
       const room = this.gameService.joinRoom({ id: roomId, username });
+      if (!room) {
+        return this.io.to(socket.id).emit(USER.ACTION.JOIN, {
+          error: 'Room not found'
+        })
+      }
       this.io.to(roomId).emit(USER.ACTION.JOIN, {
         room
       });

@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import { fileURLToPath } from 'url';
 
-import { varifyAccessToken } from './middleware/jwt/jwt.js';
 
 // dotenv.config();
 
@@ -47,35 +46,3 @@ app.use((error, req, res) => {
 });
 
 export default app;
-// socket io
-// export const server = http.createServer(app);
-
-// export const io = new Server(server, {
-//   cors: {
-//     origin: process.env.CLIENT_HOST,
-//   },
-// });
-
-// io.use((socket, next) => {
-//   if (socket.handshake.auth.token) {
-//     socket.username = getUserFromToken(socket.handshake.auth.token);
-//     next();
-//   } else {
-//     next(new Err("Please Send Token"));
-//   }
-// });
-
-// io.on("connect", socket);
-// //getUserFromToken은 데이버테이스에서 조회하는 로직이 필요
-// const getUserFromToken = (token) => {
-//   try {
-//     const { nickName } = varifyAccessToken(token);
-//     return nickName;
-//   } catch (e) {
-//     return token.nickName;
-//   }
-// };
-
-// server.listen(process.env.SERVER_PORT, () => {
-//   console.log("start", process.env.SERVER_PORT);
-// });
