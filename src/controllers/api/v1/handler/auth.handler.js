@@ -1,5 +1,5 @@
 import { HTTP_CODE } from '../../../../constants/http.constants';
-import { AuthoricationError } from '../../../../utils/Error';
+import { AuthorizationError } from '../../../../utils/Error';
 import jwt from '../../../../utils/jwt';
 
 const AUTH_REQUIRED_LIST = ['/users/*', '/problems/*', '/games/*', '/codes/*'];
@@ -14,7 +14,7 @@ const authHandler = function (req, res, next) {
     const { authorization } = req.headers;
     if (authorization === undefined) {
       // authorization header is not defined
-      throw new AuthoricationError();
+      throw new AuthorizationError();
     }
     const token = authorization.split(' ')[1];
     const verify = jwt.verifyToken(token);

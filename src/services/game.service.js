@@ -20,7 +20,11 @@ export default class GameService {
   };
 
   joinRoom = ({ id, username }) => {
-    return this.model.joinRoom({ id, username }).info;
+    try {
+      return this.model.joinRoom({ id, username })?.info;
+    } catch (e) {
+      return false;
+    }
   };
 
   leaveRoom = ({ id, username }) => {

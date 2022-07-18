@@ -9,55 +9,77 @@ export default class NoticeController {
     return this._service;
   }
 
-  getNotices = async (req, res) => {
-    const notices = await this.service.getNotices();
-    res.json({
-      code: HTTP_CODE.OK,
-      result: {
-        notices,
-      },
-    });
+  getNotices = async (req, res, next) => {
+    try {
+      const notices = await this.service.getNotices();
+      res.json({
+        code: HTTP_CODE.OK,
+        result: {
+          notices,
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
+
   };
 
-  createNotice = async (req, res) => {
+  createNotice = async (req, res, next) => {
     const { title, label, contents } = req.body;
-    const result = await this.service.createNotice({ title, label, contents });
-    res.json({
-      code: HTTP_CODE.OK,
-      result,
-    });
+    try {
+      const result = await this.service.createNotice({ title, label, contents });
+      res.json({
+        code: HTTP_CODE.OK,
+        result,
+      });
+    } catch (e) {
+      next(e);
+    }
   };
 
-  getNotice = async (req, res) => {
+  getNotice = async (req, res, next) => {
     const { id } = req.params;
-    const notice = await this.service.getNotice({ id });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: {
-        notice,
-      },
-    });
+    try {
+      const notice = await this.service.getNotice({ id });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: {
+          notice,
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
   };
   Z;
 
-  removeNotice = async (req, res) => {
+  removeNotice = async (req, res, next) => {
     const { id } = req.params;
-    const result = await this.service.removeNotice({ id });
-    res.json({
-      code: HTTP_CODE.OK,
-      result,
-    });
+    try {
+      const result = await this.service.removeNotice({ id });
+      res.json({
+        code: HTTP_CODE.OK,
+        result,
+      });
+    } catch (e) {
+      next(e);
+    }
+
   };
 
-  updateNotice = async (req, res) => {
+  updateNotice = async (req, res, next) => {
     // TODO
     // 이거 어드민 핸들러 타고가게 해야함
     const { id } = req.params;
     const { title, label, contents } = req.body;
-    const result = await this.service.updateNotice({ id, title, label, contents });
-    res.json({
-      code: HTTP_CODE.OK,
-      result,
-    });
+    try {
+      const result = await this.service.updateNotice({ id, title, label, contents });
+      res.json({
+        code: HTTP_CODE.OK,
+        result,
+      });
+    } catch (e) {
+      next(e);
+    }
   };
 }

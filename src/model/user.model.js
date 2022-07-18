@@ -10,6 +10,13 @@ export default class UserModel {
     return rows;
   };
 
+  getUserById = async ({ userId }) => {
+    const [sql, params] = this._sql.user.getUserById({ userId });
+    const [[rows], fields] = await this._pool.query(sql, params);
+    return rows;
+  }
+
+
   getUsers = async () => {
     const [sql] = this._sql.user.getUsers();
     const [rows, fields] = await this._pool.query(sql);
