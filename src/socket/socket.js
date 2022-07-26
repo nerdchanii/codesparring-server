@@ -1,4 +1,3 @@
-import { instrument } from "@socket.io/admin-ui";
 import { Server } from "socket.io";
 import ProblemModel from "../model/problem.model";
 import GameService from "../services/game.service";
@@ -41,9 +40,7 @@ export default class SocketIo {
       path: "/socket.io"
 
     });
-    instrument(io, {
-      auth: false
-    })
+
     const sql = new Sql();
     this.io = io;
     this.gameService = new GameService()

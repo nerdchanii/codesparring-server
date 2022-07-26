@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --experimental-modules --es-module-specifier-resolution=node ./bin/www.js",
-    "deploy": "nohup node init.js --exec babel-node > log.log&"
+    "deploy": "nohup node --experimental-modules --es-module-specifier-resolution=node ./bin/www.js > log.log&"
   },
   "author": "",
   "license": "ISC",
