@@ -1,6 +1,6 @@
 import { HTTP_CODE } from '../../../constants/http.constants';
 import AuthService from '../../../services/auth.service';
-import { NotFoundError } from '../../../utils/Error';
+import { NotFoundError } from '../../../utils/error';
 
 export default class AuthController {
   constructor({ service }) {
