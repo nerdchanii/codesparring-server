@@ -18,3 +18,4 @@ npm install
 
 #start node application
 node ./bin/www > app.out.log < /dev/null &
+echo "Application started"
