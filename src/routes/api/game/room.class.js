@@ -32,7 +32,6 @@ class Room {
         return false;
       }
     } catch (e) {
-      console.log(e);
       throw e;
     }
   }
@@ -47,7 +46,6 @@ class Room {
         return false;
       }
     } catch (e) {
-      console.log("Error", e);
       throw e;
     }
   }

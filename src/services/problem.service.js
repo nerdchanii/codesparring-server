@@ -12,7 +12,16 @@ export default class ProblemService {
   };
 
   createProblem = async (problemSet) => {
-    return await this.model.createProblem(problemSet);
+    const { testcase, verifycase } = problemSet;
+    const testInput = testcase.map(({ input }) => input);
+    const testOutput = testcase.map(({ output }) => output);
+    const verifycaseInput = verifycase.map(({ input }) => input);
+    const verifycaseOutput = verifycase.map(({ output }) => output);
+
+    const problem = {
+      ...problemSet, type: problemSet.problemType, input: [...testInput, ...verifycaseInput], output: [...testOutput, ...verifycaseOutput], testInput, testOutput
+    };
+    return await this.model.createProblem(problem);
   };
 
   getProblem = async ({ id }) => {
@@ -22,4 +31,9 @@ export default class ProblemService {
   updateProblem = async (data) => {
     return await this.model.updateProblem({ id: data.id, data: data });
   };
+
+  getRandomProblem = async () => {
+    return await this.model.getRandomProblem();
+  }
+
 }

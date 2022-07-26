@@ -1,22 +1,26 @@
 export default class User {
-  constructor() {}
+  constructor() { }
 
-  getUser({ nickname }) {
-    return ['SELECT nickname, points FROM users WHERE nickname = ?', [nickname]];
+  getUser({ username }) {
+    return ['SELECT username, points FROM users WHERE username = ?', [username]];
   }
 
   getUsers() {
-    return ['SELECT user_id as userId, nickname, points, email FROM users'];
+    return ['SELECT user_id as userId, username, points, email FROM users'];
   }
 
   getRanks() {
-    return ['SELECT user_id as userId, nickname, points, email FROM users ORDER BY points DESC'];
+    return ['SELECT user_id as userId, username, points, email FROM users ORDER BY points DESC'];
   }
 
-  createUser({ nickname, email, salt, password }) {
+  getUserById({ userId }) {
+    return ['SELECT user_id as userId, username, points, email FROM users WHERE user_id = ?', [userId]];
+  }
+
+  createUser({ username, email, salt, password }) {
     return [
-      'INSERT INTO users (nickname, email, salt, password) VALUES (?, ?, ?, ?)',
-      [nickname, email, salt, password],
+      'INSERT INTO users (username, email, salt, password) VALUES (?, ?, ?, ?)',
+      [username, email, salt, password],
     ];
   }
 
@@ -29,7 +33,14 @@ export default class User {
     return ['SELECT email FROM users WHERE email = ?', [email]];
   }
 
-  isExistNickname({ nickname }) {
-    return ['SELECT nickname FROM users WHERE nickname = ?', [nickname]];
+  isExistUsername({ username }) {
+    return ['SELECT username FROM users WHERE username = ?', [username]];
   }
+
+  // point UP
+  updatePoints({ username, point }) {
+    return ['UPDATE users SET points = points + ? WHERE username = ?', [point, username]];
+  }
+
+
 }

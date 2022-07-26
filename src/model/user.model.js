@@ -4,11 +4,18 @@ export default class UserModel {
     this._sql = sql;
   }
 
-  getUser = async ({ nickname }) => {
-    const [sql, params] = this._sql.user.getUser({ nickname });
+  getUser = async ({ username }) => {
+    const [sql, params] = this._sql.user.getUser({ username });
     const [[rows], fields] = await this._pool.query(sql, params);
     return rows;
   };
+
+  getUserById = async ({ userId }) => {
+    const [sql, params] = this._sql.user.getUserById({ userId });
+    const [[rows], fields] = await this._pool.query(sql, params);
+    return rows;
+  }
+
 
   getUsers = async () => {
     const [sql] = this._sql.user.getUsers();
@@ -22,11 +29,11 @@ export default class UserModel {
     return rows;
   };
 
-  createUser = async ({ nickname, email, salt, password }) => {
-    const [sql, params] = this._sql.user.createUser({ nickname, email, salt, password });
+  createUser = async ({ username, email, salt, password }) => {
+    const [sql, params] = this._sql.user.createUser({ username, email, salt, password });
     try {
       const [{ serverStatus, warningStatus }, field] = await this._pool.query(sql, params);
-      console.log(serverStatus, warningStatus);
+
       return serverStatus === 2 && warningStatus === 0;
     } catch (e) {
       return false;
@@ -44,9 +51,15 @@ export default class UserModel {
     const [rows, fields] = await this._pool.query(sql, params);
     return rows && rows.length > 0;
   };
-  isExistNickname = async ({ nickname }) => {
-    const [sql, params] = this._sql.user.isExistNickname({ nickname });
+  isExistUsername = async ({ username }) => {
+    const [sql, params] = this._sql.user.isExistUsername({ username });
     const [rows, fields] = await this._pool.query(sql, params);
     return rows && rows.length > 0;
   };
+
+  updatePoints = async ({ username, point }) => {
+    const [sql, params] = this._sql.user.updatePoints({ username, point });
+    const [{ affectedRows }, fields] = await this._pool.query(sql, params);
+    return affectedRows === 1;
+  }
 }

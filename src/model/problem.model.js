@@ -18,10 +18,14 @@ export default class ProblemModel {
     return row;
   };
   createProblem = async (problemSet) => {
-    const [sql, params] = this.sql.problem.createProblem(problemSet);
-    // affectedRows 은 영향을 받은 row 의 수를 반환한다.
-    const [{ affectedRows }, fields] = await this.pool.query(sql, params);
-    return affectedRows > 0;
+    try {
+      const [sql, params] = this.sql.problem.createProblem(problemSet);
+      // affectedRows 은 영향을 받은 row 의 수를 반환한다.
+      const [{ affectedRows }, fields] = await this.pool.query(sql, params);
+      return affectedRows > 0;
+    } catch (e) {
+      throw e;
+    }
   };
   getProblem = async ({ id }) => {
     const [sql, params] = this.sql.problem.getProblem({ id });
@@ -33,4 +37,10 @@ export default class ProblemModel {
     const [{ affectedRows }, fields] = await this.pool.query(sql, params);
     return affectedRows > 0;
   };
+
+  getRandomProblem = async () => {
+    const [sql, params] = this.sql.problem.getRandomProblem();
+    const [[row], fields] = await this.pool.query(sql, params);
+    return row;
+  }
 }

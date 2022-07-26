@@ -10,10 +10,10 @@ router.get('/ranks', Controller.userController.getRanks);
 
 router.post('/', Controller.userController.createUser);
 
-router.get('/:nickname', Controller.userController.getUser);
+router.get('/:username', Controller.userController.getUser);
 
 router.delete('/', Controller.userController.removeUser);
 router.get('/isduplicate/email/:email', Controller.userController.isExistEmail);
-router.get('/isduplicate/nickname/:nickname', Controller.userController.isExistNickname);
+router.get('/isduplicate/username/:username', Controller.userController.isExistUsername);
 
 export default router;

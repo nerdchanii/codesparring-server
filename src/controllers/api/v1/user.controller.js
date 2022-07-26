@@ -1,4 +1,3 @@
-import e from 'cors';
 import { HTTP_CODE } from '../../../constants/http.constants';
 import UserService from '../../../services/user.service';
 
@@ -15,66 +14,102 @@ export default class UserController {
     return this._service;
   }
 
-  getUser = async (req, res) => {
-    const { nickname } = req.params;
-    const user = await this.service.getUser({ nickname });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: {
-        user: user,
-      },
-    });
-  };
-  getUsers = async (req, res) => {
-    const users = await this.service.getUsers();
-    res.json({
-      code: HTTP_CODE.OK,
-      result: {
-        users: users,
-      },
-    });
-  };
-  getRanks = async (req, res) => {
-    const users = await this.service.getRanks();
-    res.json({
-      code: HTTP_CODE.OK,
-      result: {
-        users: users,
-      },
-    });
+  getUser = async (req, res, next) => {
+    const { username } = req.params;
+    try {
+      const user = await this.service.getUser({ username });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: {
+          user: user,
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
   };
 
-  createUser = async (req, res) => {
-    const { email, nickname, password } = req.body;
-    const result = await this.service.createUser({ nickname, email, password });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: result,
-    });
+
+
+  getUsers = async (req, res, next) => {
+    try {
+      const users = await this.service.getUsers();
+      res.json({
+        code: HTTP_CODE.OK,
+        result: {
+          users: users,
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
   };
 
-  removeUser = async (req, res) => {
+  getRanks = async (req, res, next) => {
+    try {
+      const users = await this.service.getRanks();
+      res.json({
+        code: HTTP_CODE.OK,
+        result: {
+          users: users,
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  createUser = async (req, res, next) => {
+    const { email, username, password } = req.body;
+    try {
+      const result = await this.service.createUser({ username, email, password });
+      return res.json({
+        code: HTTP_CODE.OK,
+        result: result,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  removeUser = async (req, res, next) => {
     const { userId } = req.body;
-    const result = await this.service.removeUser({ userId });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: result,
-    });
+    const [, token] = req.headers.authorization.split(' ');
+    try {
+      const result = await this.service.removeUser({ userId, token });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: result,
+      });
+    } catch (e) {
+      next(e);
+    }
   };
-  isExistEmail = async (req, res) => {
+
+  isExistEmail = async (req, res, next) => {
     const { email } = req.params;
-    const result = await this.service.isExistEmail({ email });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: result,
-    });
+    try {
+      const result = await this.service.isExistEmail({ email });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: result,
+      });
+    } catch (e) {
+      next(e);
+    }
   };
-  isExistNickname = async (req, res) => {
-    const { nickname } = req.params;
-    const result = await this.service.isExistNickname({ nickname });
-    res.json({
-      code: HTTP_CODE.OK,
-      result: result,
-    });
+
+  isExistUsername = async (req, res, next) => {
+    const { username } = req.params;
+    try {
+      const result = await this.service.isExistUsername({ username });
+      res.json({
+        code: HTTP_CODE.OK,
+        result: result,
+      });
+    }
+    catch (e) {
+      next(e);
+    }
   };
 }
