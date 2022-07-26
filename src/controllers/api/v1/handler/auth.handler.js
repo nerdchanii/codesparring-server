@@ -18,7 +18,7 @@ const authHandler = function (req, res, next) {
     }
     const token = authorization.split(' ')[1];
     const verify = jwt.verifyToken(token);
-    console.log(verify);
+
     return next();
   }
   return next();

@@ -71,7 +71,6 @@ export default class SocketIo {
 
   onGetRooms({ socket }) {
     const rooms = this.gameService.getRooms();
-    console.log(rooms, 'rooms');
     this.io.emit(USER.ACTION.GET_ROOMS, { rooms });
   }
 
@@ -80,12 +79,10 @@ export default class SocketIo {
     const room = this.gameService.createRoom({ name });
     socket.emit(USER.ACTION.CREATE_ROOM, { room });
 
-    console.log(room);
   }
 
   onJoin({ socket }, { username, roomId }) {
     //join room
-    console.log('room id:', roomId);
     if (roomId === USER.DEFAULT_ROOM_ID) {
       socket.join(roomId);
       this.io.to(roomId).emit(USER.ACTION.JOIN, {
@@ -120,7 +117,6 @@ export default class SocketIo {
   }
 
   onLeave({ socket }, { roomId, username }) {
-    console.log(`user: ${username} left: ${roomId}`)
     this.gameService.leaveRoom({ id: roomId, username });
     socket.leave(roomId);
     this.io.to(roomId).emit(USER.ACTION.LEAVE, {
@@ -135,7 +131,6 @@ export default class SocketIo {
   }
 
   async onGameStart({ socket }, { roomId, username }) {
-    console.log('game start');
     const problem = await this.problemService.getRandomProblem();
     this.gameService.setProblem({ roomId, problem });
     this.gameService.gameStart({ roomId, problem });
@@ -147,8 +142,6 @@ export default class SocketIo {
   }
 
   onMessage = ({ socket }, { username, roomId, message }) => {
-    console.log(socket?.handshake?.auth);
-    console.log(username, roomId, message);
 
     this.emitMessage({ socket, username, roomId, message });
   }
@@ -160,10 +153,7 @@ export default class SocketIo {
   }
 
   async onCodeTest({ socket }, { roomId, code, lang }) {
-    console.log('on test run');
-    console.log(lang, code);
     const problem = this.gameService.getProblem({ roomId });
-    console.log(problem);
     const { test_input, test_output } = problem;
     const promises = await Promise.allSettled(test_input.map((input, index) => {
       return this.codeService.codeTest({ lang, code, input, output: test_output[index] })
@@ -175,30 +165,22 @@ export default class SocketIo {
   }
 
   emitCodeTest({ socket, results }) {
-    console.log('return test run');
-    console.log({ results })
     return this.io.to(socket.id).emit(USER.ACTION.CODE_TEST, { results });
   }
 
   async onCodeSubmit({ socket }, { roomId, username, lang, code }) {
-    console.log('submit code');
     const problem = this.gameService.getProblem({ roomId });
 
     const results = await this.codeService.codeSubmit({ problemId: problem.id, lang, code });
     // 하나라도 틀린게 있으면 오류 처리
-    console.log(results)
     const correct = !results.some(({ correct }) => correct === false);
-    console.log('correct:', correct);
     if (correct) {
-      console.log('username:', username);
-      console.log(this.userService._model.sql);
       await this.userService.updatePoints({ username, point: 15 });
     }
     this.emitCodeSubmit({ socket, roomId, username, correct });
   }
 
   emitCodeSubmit({ socket, roomId, username, correct, results }) {
-    console.log('return submit code');
     if (correct) {
       // 누군가가 정답을 맞추었을때! 
       this.gameEnd({ roomId });
@@ -208,7 +190,6 @@ export default class SocketIo {
   }
 
   gameEnd({ roomId }) {
-    console.log('game end', roomId);
     this.gameService.gameEnd({ roomId });
     this.io.to(roomId).emit(USER.ACTION.GAME_END);
   }

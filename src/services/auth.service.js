@@ -10,12 +10,11 @@ export default class AuthService {
 
   createToken = async ({ email, password }) => {
     const user = await this._model.getUser({ email });
-    console.log(user);
     if (user && user.password === decryptoPassword({ password, salt: user.salt })) {
-      const { userId, username, email } = user;
+      const { user_id, username, email } = user;
       const token = this.jwt.createToken({ username, email });
       return {
-        userId,
+        userId: user_id,
         profile: {
           username,
           email,

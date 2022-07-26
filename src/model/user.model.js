@@ -33,7 +33,7 @@ export default class UserModel {
     const [sql, params] = this._sql.user.createUser({ username, email, salt, password });
     try {
       const [{ serverStatus, warningStatus }, field] = await this._pool.query(sql, params);
-      console.log(serverStatus, warningStatus);
+
       return serverStatus === 2 && warningStatus === 0;
     } catch (e) {
       return false;

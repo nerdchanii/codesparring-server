@@ -74,7 +74,7 @@ export default class UserController {
 
   removeUser = async (req, res, next) => {
     const { userId } = req.body;
-    const token = req.headers.authorization;
+    const [, token] = req.headers.authorization.split(' ');
     try {
       const result = await this.service.removeUser({ userId, token });
       res.json({

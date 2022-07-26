@@ -22,20 +22,11 @@ export default class ProblemController {
   };
 
   createProblem = async (req, res, next) => {
-    const { title, type, level, test_input, test_output, input, output, requirement, description } =
-      req.body;
+    // const { title, type, level, test_input, test_output, input, output, requirement, description } =
+    // JSON.parse(req.body);
+    const { data } = req.body;
     try {
-      const result = await this.service.createProblem({
-        title,
-        type,
-        level,
-        test_input,
-        test_output,
-        input,
-        output,
-        requirement,
-        description,
-      });
+      const result = await this.service.createProblem(JSON.parse(data));
       res.json({
         code: HTTP_CODE.OK,
         result: {
@@ -44,6 +35,7 @@ export default class ProblemController {
       });
     } catch (e) {
       next(e);
+
     }
 
   };

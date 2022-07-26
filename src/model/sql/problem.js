@@ -16,7 +16,7 @@ export default class Problem {
   // testcase, input_case, outpu_case, requirement = json
   // requirement 는 택스트로 바꾸는게 좋을듯
   createProblem = (data) => {
-    const { title, type, level, test_input, test_output, input, output, requirement, description } =
+    const { title, type, level, testInput, testOutput, input, output, requirement, description } =
       data;
     const makeJson = (item) => JSON.stringify(item);
     return [
@@ -27,8 +27,8 @@ export default class Problem {
         title,
         type,
         level,
-        makeJson(test_input),
-        makeJson(test_output),
+        makeJson(testInput),
+        makeJson(testOutput),
         makeJson(input),
         makeJson(output),
         makeJson(requirement),

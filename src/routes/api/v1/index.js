@@ -14,7 +14,7 @@ router.use('/auth', auth);
 router.use('/notices', notices);
 
 
-// router.use(authHandler);
+router.use(authHandler);
 router.use('/codes', codes);
 router.use('/problems', problems);
 
