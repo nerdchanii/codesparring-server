@@ -1,5 +1,5 @@
 import { cryptoPassword } from '../utils/crypto';
-import { ForbiddenError, ConflictError } from '../utils/Error';
+import { ForbiddenError, ConflictError } from '../utils/error';
 import jwt from '../utils/jwt';
 
 export default class UserService {

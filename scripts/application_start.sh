@@ -17,5 +17,5 @@ export NVM_DIR="$HOME/.nvm"
 npm install
 
 #start node application
-node ./bin/www > app.out.log < /dev/null &
+npm run deploy
 echo "Application started"

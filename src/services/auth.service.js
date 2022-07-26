@@ -1,5 +1,5 @@
 import { decryptoPassword } from '../utils/crypto.js';
-import { NotFoundError } from '../utils/Error.js';
+import { NotFoundError } from '../utils/error.js';
 import jwt from '../utils/jwt.js';
 
 export default class AuthService {

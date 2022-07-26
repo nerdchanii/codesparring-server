@@ -1,5 +1,5 @@
 import { HTTP_CODE } from '../../../../constants/http.constants';
-import { AuthorizationError } from '../../../../utils/Error';
+import { AuthorizationError } from '../../../../utils/error';
 import jwt from '../../../../utils/jwt';
 
 const AUTH_REQUIRED_LIST = ['/users/*', '/problems/*', '/games/*', '/codes/*'];

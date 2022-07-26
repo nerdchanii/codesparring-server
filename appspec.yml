@@ -1,9 +1,9 @@
 version: 0.0
 os: linux
-files: 
+files:
   - source: /
     destination: /home/ubuntu/server
-hook:
+hooks:
   ApplicationStop:
     - location: scripts/application_stop.sh
       timeout: 300
@@ -15,4 +15,3 @@ hook:
   ApplicationStart:
     - location: scripts/application_start.sh
       timeout: 300
-      
