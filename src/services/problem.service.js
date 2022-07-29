@@ -24,8 +24,8 @@ export default class ProblemService {
     return await this.model.createProblem(problem);
   };
 
-  getProblem = async ({ id }) => {
-    return await this.model.getProblem({ id });
+  getProblem = async ({ id, whole }) => {
+    return await this.model.getProblem({ id, whole });
   };
 
   updateProblem = async (data) => {

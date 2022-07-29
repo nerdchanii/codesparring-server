@@ -42,8 +42,9 @@ export default class ProblemController {
 
   getProblem = async (req, res, next) => {
     const { id } = req.params;
+    const { whole = false } = req.body;
     try {
-      const problem = await this.service.getProblem({ id });
+      const problem = await this.service.getProblem({ id, whole });
       res.json({
         code: HTTP_CODE.OK,
         result: {

@@ -9,8 +9,9 @@ export default class Problem {
     return ['SELECT id, title, type, is_stable, not_stable, vote_count FROM problems'];
   };
 
-  getProblem = ({ id }) => {
-    return ['SELECT * FROM problems WHERE id = ?', [id]];
+  getProblem = ({ id, whole }) => {
+    if (!!whole) { return ['SELECT * FROM problems WHERE id = ?', [id]]; }
+    return ['SELECT id, title, type, test_output, test_input, requirement, description FROM problems WHERE id = ?', [id]];
   };
 
   // testcase, input_case, outpu_case, requirement = json

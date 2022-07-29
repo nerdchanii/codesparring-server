@@ -17,6 +17,7 @@ export default class ProblemModel {
     const [row, fields] = await this.pool.query(sql, params);
     return row;
   };
+
   createProblem = async (problemSet) => {
     try {
       const [sql, params] = this.sql.problem.createProblem(problemSet);
@@ -27,8 +28,9 @@ export default class ProblemModel {
       throw e;
     }
   };
-  getProblem = async ({ id }) => {
-    const [sql, params] = this.sql.problem.getProblem({ id });
+
+  getProblem = async ({ id, whole = false }) => {
+    const [sql, params] = this.sql.problem.getProblem({ id, whole });
     const [[row], fields] = await this.pool.query(sql, params);
     return row;
   };

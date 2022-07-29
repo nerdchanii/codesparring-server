@@ -23,9 +23,8 @@ export default class CodeService {
 
   codeSubmit = async ({ problemId, lang, code }) => {
     const { input_case: inputs, output_case: outputs } = await this.model.getProblem({
-      id: problemId,
+      id: problemId, whole: true,
     });
-
     const data = await Promise.all(inputs.map((each) => fetchGlot({ input: each, lang, code })));
     const results = data.map((eachResult, idx) => {
       const stdout = this.parseStdout(eachResult.stdout);
