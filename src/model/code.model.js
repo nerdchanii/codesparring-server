@@ -13,8 +13,8 @@ export default class CodeModel {
     return this._sql;
   }
 
-  getProblem = async ({ id }) => {
-    const [sql, params] = this.sql.problem.getProblem({ id });
+  getProblem = async ({ id, whole = false }) => {
+    const [sql, params] = this.sql.problem.getProblem({ id, whole });
     const [[row], fileds] = await this._pool.query(sql, params);
     return row;
   };
