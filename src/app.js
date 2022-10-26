@@ -12,7 +12,7 @@ import indexRouter from './routes/index';
 import apiRouter from './routes/api';
 
 // 삭제될 것들?
-// import cors from "cors";
+import cors from "cors";
 
 // create express app
 const app = express();
@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.use(cors());
 // morgan logger 
 app.use(logger('dev'));
 
